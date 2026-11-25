@@ -32,6 +32,20 @@ html[data-theme=dark]{color-scheme:dark;--green:#a4d9bb;--mint:#29493c;--ink:#e5
 /* إصلاح 2026-11-01: الشريط الجانبي كان يخفي آخر 4 روابط تحت التذييل على الشاشات القصيرة */
 @media(min-width:651px){aside{overflow:hidden}aside #nav{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;margin-bottom:12px}aside .side-bottom{flex-shrink:0}}
 @media(min-width:651px) and (max-height:900px){aside{padding-top:24px;padding-bottom:20px}aside nav a{padding:10px 14px}}
+/* الأقرب أولًا — 2026-11-26 */
+.h-near{list-style:none;padding:0;margin:14px 0;display:grid;gap:8px}
+.h-near li{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--line);border-radius:14px;background:var(--paper,#fff)}
+.h-near-n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--mint);color:var(--green);font-weight:700;flex-shrink:0}
+.h-near li>div{flex:1;min-width:0}
+.h-near b{display:block}
+.h-near small{color:var(--muted);font-size:12px}
+.h-near i{display:block;height:5px;border-radius:5px;background:var(--green);opacity:.35;margin-top:5px}
+.h-near em{font-style:normal;font-size:12px;color:var(--muted);white-space:nowrap}
+.h-near-now{border-color:var(--green)!important;background:var(--mint)!important}
+.h-near-now em{color:var(--green);font-weight:700}
+.h-near-timeout em,.h-near-declined em{color:#a86a1f}
+.h-near-claimed em{color:var(--green);font-weight:700}
+html[data-theme=dark] .h-near li{background:transparent}
 </style><style>/* سند — إضافات 2026-11-01 */
 :root{--p-paper:#fff;--p-soft:#f4f7f2;--p-amber:#865722}
 html[data-theme=dark]{--p-paper:#20352a;--p-soft:#1b2e24;--p-amber:#e9c48f}
@@ -131,6 +145,16 @@ html[data-theme=dark]{--p-paper:#20352a;--p-soft:#1b2e24;--p-amber:#e9c48f}
  .h-hub-links a b{font-size:14px}
  .h-hub-links a span{font-size:11px;white-space:nowrap}
 }
+/* اسمع — المساعد الذكي 2026-11-26 */
+.a-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.a-acts button{font-size:13px;padding:7px 12px;min-height:0}
+.a-urgent{border:2px solid #b5473a!important}
+.a-voicebar{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.a-voicebar button{font-size:13px;padding:8px 12px;min-height:0}
+#assistantPanel .bubble .chips{margin-top:8px}
+#assistantPanel>.chips{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;gap:6px;padding-bottom:4px;scrollbar-width:none}
+#assistantPanel .chips button{font-size:14px!important;min-height:0!important;padding:8px 12px!important;white-space:nowrap;flex-shrink:0;width:auto!important}
+#assistantPanel .a-acts button{width:auto!important}
 </style></head><body><main id="welcomeScreen" class="welcome-screen" hidden></main><aside><a class="brand" href="#home"><span class="logo">س</span><span>سند<small>SANAD CARE</small></span></a><p class="side-label">معك، ومع من تحب</p><nav id="nav"></nav><div class="side-bottom"><span class="online"></span> كلنا حولك<div>نموذج الابتكار الصحي · 2027</div></div></aside><div class="workspace"><header><div><span class="small">مساحة الرعاية العائلية</span><strong id="familyHeading"></strong></div><div class="header-actions"><button id="themeToggle" aria-label="تبديل الوضع النهاري والليلي" aria-pressed="false">☾ ليل</button><button id="role">◉ واجهة كبير السن</button><button id="exitDemo" title="العودة لاختيار المساحة">خروج تجريبي</button></div></header><main id="main"></main><footer>سند، لأن الرعاية تبدأ بالقرب. <span>نموذج تجريبي — البيانات محفوظة في هذا المتصفح فقط</span></footer></div><button id="assistantLauncher" class="assistant-launch" aria-label="فتح مساعد اسمع" aria-expanded="false" aria-controls="assistantPanel"><span aria-hidden="true">◉</span>اسمع</button><section id="assistantPanel" class="assistant-panel" aria-label="مساعد اسمع" hidden></section><article id="printSummary" aria-label="الملخص الصحي للطباعة"></article><div id="toast" role="status"></div><dialog id="modal"></dialog><script>const $=s=>document.querySelector(s);const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const seed=()=>({meds:[{id:1,name:'دواء الصباح',dose:'قرص واحد · حسب الوصفة التجريبية',time:'08:00',done:true,by:'مشاعل',at:'08:05'},{id:2,name:'دواء الظهر',dose:'قرص واحد · حسب الوصفة التجريبية',time:'13:00',done:false},{id:3,name:'دواء المساء',dose:'قرص واحد · حسب الوصفة التجريبية',time:'20:00',done:false}],appointments:[{name:'متابعة طب الأسرة',doctor:'د. أحمد · العيادة العامة',date:'2027-01-24',time:'10:30',companion:'مشاعل',hospital:'مستشفى سند التجريبي',location:'الرياض — عنوان افتراضي للعرض'}],family:[{name:'مشاعل',relation:'ابنة · المسؤول الأساسي'},{name:'عبدالله',relation:'ابن · المسؤول البديل'}],notes:'يفضل التواصل بصوت واضح وهادئ. العائلة تتابع تجهيز الزيارة قبل الموعد بيوم.',notesUpdated:'',logs:[],mode:'family',care:'shared',demo:0});let state;try{state=JSON.parse(localStorage.getItem('sanad-v1'))||seed()}catch{state=seed()}state.family=state.family.map(f=>({...f,name:f.name==='نورة'?'مشاعل':f.name}));state.meds=state.meds.map(m=>({...m,by:m.by==='نورة'?'مشاعل':m.by}));state.appointments=state.appointments.map(a=>({...a,companion:a.companion==='نورة'?'مشاعل':a.companion}));state.logs=state.logs.map(l=>l.replaceAll('نورة','مشاعل'));if(state.notes===undefined)state.notes='';let assistantOpen=false;let page='home';const routes=[['home','⌂','نظرة عامة'],['meds','◷','الأدوية والجرعات'],['health','♡','الملف الصحي'],['appointments','▦','المواعيد'],['family','♧','العائلة'],['tasks','☑','المتابعة العائلية'],['watch','♡','الصحة والساعة'],['settings','⚙','الإعدادات']];let messages=[{text:'يا هلا، أنا اسمع، مساعدك. أقدر أوضح لك طريقة متابعة الأدوية والمواعيد. هذه محادثة تجريبية بإجابات جاهزة، وليست استشارة طبية.'}];
 function save(){if(activeSpace)localStorage.setItem('sanad-space-'+activeSpace,JSON.stringify(state));else localStorage.setItem('sanad-v1',JSON.stringify(state))}function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>$('#toast').style.display='none',3200)}function go(p){location.hash=p}function title(t,p,button=''){return `<div class="page-head"><div><span class="eyebrow">رعاية أقرب، حياة أطمأن</span><h1>${t}</h1><p>${p}</p></div>${button}</div>`}function card(t,body,action=''){return `<section class="card"><div class="section-head"><h2>${t}</h2>${action}</div>${body}</section>`}function medHTML(m){return `<div class="med"><span class="icon">◷</span><div class="med-info"><strong>${esc(m.name)}</strong><p>${esc(m.dose)}</p><span class="time">${esc(m.time)} ${m.done?' · أكّدها '+esc(m.by)+'، '+esc(m.at):''}</span></div>${!m.done?`<button data-dose-task="${m.id}">طلب متابعة</button>`:''}${m.done?`<button class="pill" data-undo="${m.id}" title="تصحيح التأكيد">✓ تم التأكيد</button>`:`<button class="primary" data-confirm="${m.id}">${state.mode==='elder'?'أخذت الدواء':'تأكيد الجرعة'}</button>`}</div>`}function appointmentHTML(a){let d=new Date(a.date+'T12:00:00');return `<div class="appointment"><div class="date"><strong>${d.getDate()}</strong>${d.toLocaleDateString('ar-SA',{month:'short',calendar:'gregory'})}</div><div><h3>${esc(a.name)}</h3><p>${esc(a.doctor)} · ${esc(a.time)}</p><p>المرافق: ${esc(a.companion)}</p><p>المستشفى: ${esc(a.hospital||'غير محدد')}</p><p>الموقع: ${esc(a.location||'لم يحدد بعد')}</p>${a.location&&!a.location.includes('افتراضي')?`<a class="location-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((a.hospital||'')+' '+a.location)}" target="_blank" rel="noopener noreferrer">عرض الموقع على الخريطة ↗</a>`:''}<br><button class="remove-appointment" data-remove-appointment="${state.appointments.indexOf(a)}">حذف الموعد</button></div></div>`}function familyHTML(){return state.family.map((f,i)=>`<div class="family"><span class="avatar">${esc(f.name[0])}</span><div><h3>${esc(f.name)}</h3><p>${esc(f.relation)}</p></div><span class="pill ${i?'gray':''}">${i?'متابع':'مسؤول اليوم'}</span><div class="contact-actions">${contactLinks(f.phone,true)}<button data-contact="${i}">${f.phone?'تعديل الرقم':'إضافة رقم'}</button></div></div>`).join('')}
@@ -273,7 +297,7 @@ function playDaySummary(){
 </script><script>/* Sanad hackathon edition. All incidents, location and sensor samples are local simulations. */
 const H = {
   version: 1, timer: null, recognition: null,
-  statusNames: {verifying:'ننتظر رد كبير السن',family:'بانتظار المتابع الأساسي',backup:'بانتظار البديل',owned:'متابع مسؤول',closed:'أُغلقت المتابعة'},
+  statusNames: {verifying:'ننتظر رد كبير السن',family:'بانتظار الأقرب',backup:'انتقل للي بعده',owned:'متابع مسؤول',closed:'أُغلقت المتابعة'},
   kinds: {fall:'سقوط محتمل',sos:'طلب مساعدة',zone:'خروج عن النطاق المتفق عليه',routine:'تغيّر في الروتين'}
 };
 function hData(){
@@ -291,29 +315,48 @@ function hCard(title,body,sub=''){return `<section class="h-card"><div class="h-
 function hNotice(){return `<div class="h-demo-note"><span class="h-dot"></span><b>مختبر سند</b> محاكاة محلية: لا اتصال بالساعة، ولا إرسال تنبيهات أو اتصالات فعلية.</div>`}
 function hOpenIncident(){return hData().incidents.find(x=>x.status!=='closed')}
 function hEvent(i,text){i.events.push({at:hNow(),text});save()}
+// الإرسال للأقرب: نرتب الأسرة حسب بعدهم عن كبير السن (مواقع تمثيلية يشاركها كل فرد بموافقته)، ولكل شخص ٥ دقائق يأكد فيها.
+const H_SAMPLE_KM={'مشاعل':6.8,'عبدالله':1.4,'نورة':3.1};
+function hStep(){return hData().fast?15000:300000}
+function hVerifyMs(){return hData().fast?10000:60000}
+function hFmt(ms){const t=Math.max(0,Math.ceil(ms/1000));return `${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`}
+function hKm(km){return km==null?'الموقع غير مشارك':`${km.toLocaleString('ar-SA',{maximumFractionDigits:1})} كم`}
+function hGeo(){
+ if(!state.geoSeeded&&state.profile?.name==='أبو عبدالله'&&state.family.length===2&&state.family[0]?.name==='مشاعل'){state.family.push({name:'نورة',relation:'حفيدة · متابعة'});}
+ if(!state.geoSeeded){state.family.forEach(f=>{if(f.km===undefined){const k=H_SAMPLE_KM[f.name];f.km=k??null;f.shareLoc=k!==undefined}});state.geoSeeded=true;save()}
+ state.family.forEach(f=>{if(f.km===undefined){f.km=null;f.shareLoc=false}});
+}
+function hQueue(){hGeo();const all=state.family.map((f,j)=>({idx:j,km:f.shareLoc&&typeof f.km==='number'?f.km:null,state:'waiting'}));
+ return [...all.filter(x=>x.km!==null).sort((a,b)=>a.km-b.km),...all.filter(x=>x.km===null)];}
+function hQ(i){if(!i.queue){i.queue=hQueue();i.qpos=Math.max(0,i.queue.findIndex(q=>q.idx===i.recipient))}return i.queue}
+function hSendTo(i,now){const q=hQ(i)[i.qpos];if(!q){i.recipient=null;i.deadline=0;hEvent(i,'ما أحد من الأسرة أكّد استلام الطلب. الحالة غير محسومة؛ تواصلوا مباشرة');return}
+ i.recipient=q.idx;i.deadline=now+hStep();hEvent(i,`أُرسل الطلب إلى ${taskName(q.idx)} (${hKm(q.km)})${i.qpos===0?' لأنه الأقرب':''}. عنده ٥ دقائق يأكد الاستلام${hData().fast?' — مسرّعة إلى ١٥ ثانية للعرض':''}`)}
 function hStartIncident(kind='fall'){
   if(hOpenIncident()){toast('فيه متابعة مفتوحة؛ أكملها قبل بدء سيناريو جديد');go('safety');return}
-  const d=hData(),at=hNow(),primary=state.family.length?0:null;
-  const i={id:crypto.randomUUID(),kind,status:kind==='fall'?'verifying':'family',created:at,deadline:at+(kind==='fall'?20000:30000),recipient:primary,owner:null,events:[],closedAt:null,outcome:''};
+  const d=hData(),at=hNow(),queue=hQueue();
+  const i={id:crypto.randomUUID(),kind,status:kind==='fall'?'verifying':'family',created:at,deadline:0,recipient:null,owner:null,events:[],closedAt:null,outcome:'',queue,qpos:0};
   d.incidents.unshift(i);hEvent(i,`بدأ حدث ${H.kinds[kind]} — مصدره محاكاة، وليس مستشعرًا`);
-  if(kind==='fall')hEvent(i,'ظهرت رسالة «أنت بخير؟»؛ مهلة العرض ٢٠ ثانية');
-  else hEvent(i,'أُدرج طلب متابعة محلي للأساسي؛ لم تُرسل رسالة');
+  hEvent(i,'رتّبنا الأسرة حسب القرب: '+(queue.map(q=>`${taskName(q.idx)} (${hKm(q.km)})`).join('، ')||'لا يوجد أفراد مسجلون'));
+  if(kind==='fall'){i.deadline=at+hVerifyMs();i.recipient=queue[0]?.idx??null;hEvent(i,`ظهرت رسالة «أنت بخير؟» لكبير السن؛ مهلة ${hData().fast?'١٠ ثوانٍ':'دقيقة'}`)}
+  else hSendTo(i,at);
   hAudit(`فتح متابعة: ${H.kinds[kind]}`);go('safety');render();
 }
 function hAdvance(i,now=hNow()){
   if(!i||!i.deadline||!['verifying','family','backup'].includes(i.status)||now<i.deadline)return false;
-  if(i.status==='verifying'){i.status='family';i.deadline=now+30000;hEvent(i,'لم يُسجل رد خلال مهلة العرض؛ ننتظر استلام الأساسي محليًا')}
-  else if(i.status==='family'){i.status='backup';i.recipient=state.family.length>1?1:null;i.deadline=now+30000;hEvent(i,i.recipient===null?'لا يوجد بديل مسجّل؛ يلزم تدخل يدوي':'انتهت مهلة الأساسي؛ انتقلت محاكاة الطلب إلى البديل')}
-  else {i.deadline=0;hEvent(i,'لم يستلم أحد حتى الآن. الحالة غير محسومة؛ يلزم التواصل يدويًا')}
+  hQ(i);
+  if(i.status==='verifying'){i.status='family';hEvent(i,'ما رد كبير السن خلال المهلة؛ ننتقل للأسرة حسب القرب');hSendTo(i,now)}
+  else{const cur=i.queue[i.qpos];if(cur)cur.state='timeout';hEvent(i,`ما أكّد ${taskName(cur?.idx)} خلال ٥ دقائق`);i.qpos++;i.status='backup';hSendTo(i,now)}
   return true;
 }
+function hPass(){const i=hOpenIncident();if(!i||state.mode==='elder'||!['family','backup'].includes(i.status)||i.recipient!==state.actor)return;
+ hQ(i);const cur=i.queue[i.qpos];if(cur)cur.state='declined';hEvent(i,`${actorName()} اعتذر عن الاستلام؛ ننقل الطلب فورًا للي بعده`);i.qpos++;i.status='backup';hSendTo(i,hNow());save();render()}
 function hResolve(outcome){const i=hOpenIncident();if(!i)return;
   if(outcome==='أنا بخير'&&state.mode!=='elder')return;
   if(outcome!=='أنا بخير'&&(i.status!=='owned'||i.owner!==state.actor))return;
   i.status='closed';i.closedAt=hNow();i.outcome=outcome;i.deadline=0;hEvent(i,`النتيجة المسجلة: ${outcome}`);hAudit(`أُغلقت متابعة ${H.kinds[i.kind]}: ${outcome}`);render();
 }
 function hClaim(){const i=hOpenIncident();if(!i||state.mode==='elder'||!['family','backup'].includes(i.status)||i.recipient!==state.actor)return;
- i.owner=state.actor;i.status='owned';i.claimedAt=hNow();i.deadline=0;hEvent(i,`${actorName()} استلم المتابعة؛ الاستلام لا يعني حل الحالة`);hAudit(`${actorName()} استلم متابعة ${H.kinds[i.kind]}`);render();
+ hQ(i);if(i.queue[i.qpos])i.queue[i.qpos].state='claimed';i.owner=state.actor;i.status='owned';i.claimedAt=hNow();i.deadline=0;hEvent(i,`${actorName()} استلم المتابعة؛ الاستلام لا يعني حل الحالة`);hAudit(`${actorName()} استلم متابعة ${H.kinds[i.kind]}`);render();
 }
 function hSafetyPage(){const d=hData(),i=hOpenIncident(),last=d.incidents[0];
  const timeline=(i||last)?.events||[];
@@ -321,9 +364,14 @@ function hSafetyPage(){const d=hData(),i=hOpenIncident(),last=d.incidents[0];
  const actor=`<label class="h-inline-label">شخصية العرض<select id="h-actor">${state.family.map((f,j)=>`<option value="${j}" ${j===state.actor?'selected':''}>${esc(f.name)}</option>`).join('')}</select></label>`;
  return `<div class="h-wrap">${hHead('استجابة مترابطة','من التنبيه إلى الاطمئنان','نعرف من استلم، وماذا حدث بعد التنبيه.',hButton('ملخص تسليم الرعاية','handoff'))}${hNotice()}
  <div class="h-flow">${stages.map((s,n)=>`<div class="${i&&stage===s?'current':''}"><span>0${n+1}</span>${H.statusNames[s]}</div>`).join('')}</div>
- <div class="h-grid">${hCard(i?H.kinds[i.kind]:'دائرة الاستجابة',i?`<div class="h-alert-orb ${stage==='owned'?'calm':''}">${stage==='owned'?'✓':'!'}</div><h3 class="h-center">${H.statusNames[stage]}</h3><p class="h-center">${stage==='owned'?'المسؤول: '+esc(taskName(i.owner)):stage==='verifying'?'نطلب ردًا بسيطًا قبل إشراك العائلة.':'المتابع المطلوب: '+esc(taskName(i.recipient))}</p><div class="h-countdown" data-h-countdown>${i.deadline?Math.max(0,Math.ceil((i.deadline-hNow())/1000)):'—'}</div><p class="h-center small">${i.deadline?'ثانية متبقية في محاكاة العرض':'لا يوجد عدّ تنازلي نشط'}</p><div class="h-actions h-center">${stage==='verifying'?hButton('اعرض رسالة كبير السن','elder-prompt','primary')+hButton('تسريع مهلة العرض','advance'):['family','backup'].includes(stage)?hButton('أنا أتابع الحالة','claim','primary',i.recipient===state.actor?'':'disabled')+(i.deadline?hButton('تسريع المهلة','advance'):''):hButton('سجّل نتيجة المتابعة','resolve','primary')}</div>${actor}<p class="h-small">هذه المهل لتوضيح التسلسل فقط، وليست بروتوكولًا طبيًا. عند خطر حقيقي استخدم وسائل الاتصال الرسمية مباشرة.</p>`:`<div class="h-alert-orb calm">✓</div><h3 class="h-center">ما فيه متابعة مفتوحة</h3><p class="h-center">جرّب سقوطًا محتملًا، أو طلب مساعدة يدويًا.</p><div class="h-actions h-center">${hButton('محاكاة سقوط محتمل','fall','primary')}${hButton('محاكاة طلب مساعدة','sos')}</div>${last?`<div class="h-soft">آخر نتيجة: ${esc(last.outcome)} · ${hStamp(last.closedAt)}</div>`:''}`,hPill(i?'حدث محاكاة مفتوح':'جاهز للتجربة',i?'amber':''))}
+ <div class="h-grid">${hCard(i?H.kinds[i.kind]:'دائرة الاستجابة',i?`<div class="h-alert-orb ${stage==='owned'?'calm':''}">${stage==='owned'?'✓':'!'}</div><h3 class="h-center">${H.statusNames[stage]}</h3><p class="h-center">${stage==='owned'?'المسؤول: '+esc(taskName(i.owner)):stage==='verifying'?'نطلب ردًا بسيطًا قبل إشراك العائلة.':'المتابع المطلوب: '+esc(taskName(i.recipient))}</p><div class="h-countdown" data-h-countdown>${i.deadline?hFmt(i.deadline-hNow()):'—'}</div><p class="h-center small">${i.deadline?(stage==='verifying'?'متبقي على رد كبير السن':'متبقي قبل ما ينتقل الطلب للي بعده'):'لا يوجد عدّ تنازلي نشط'}</p><div class="h-actions h-center">${stage==='verifying'?hButton('اعرض رسالة كبير السن','elder-prompt','primary')+hButton('تسريع مهلة العرض','advance'):['family','backup'].includes(stage)?hButton('أنا أتابع الحالة','claim','primary',i.recipient===state.actor?'':'disabled')+hButton('ما أقدر، حوّلها للي بعدي','pass','',i.recipient===state.actor?'':'disabled')+(i.deadline?hButton('تسريع المهلة','advance'):''):hButton('سجّل نتيجة المتابعة','resolve','primary')}</div>${actor}<p class="h-small">هذه المهل لتوضيح التسلسل فقط، وليست بروتوكولًا طبيًا. عند خطر حقيقي استخدم وسائل الاتصال الرسمية مباشرة.</p>`:`<div class="h-alert-orb calm">✓</div><h3 class="h-center">ما فيه متابعة مفتوحة</h3><p class="h-center">جرّب سقوطًا محتملًا، أو طلب مساعدة يدويًا.</p><div class="h-actions h-center">${hButton('محاكاة سقوط محتمل','fall','primary')}${hButton('محاكاة طلب مساعدة','sos')}</div>${last?`<div class="h-soft">آخر نتيجة: ${esc(last.outcome)} · ${hStamp(last.closedAt)}</div>`:''}`,hPill(i?'حدث محاكاة مفتوح':'جاهز للتجربة',i?'amber':''))}
  ${hCard('سجل الاستجابة',`<ol class="h-timeline">${timeline.map(e=>`<li><time>${hStamp(e.at)}</time><p>${esc(e.text)}</p></li>`).join('')||'<li><p>كل خطوة ستظهر هنا مع توقيتها ومصدرها.</p></li>'}</ol>`)}</div>
+ ${hNearCard(i||last)}
  ${hCard('معلومة تساعد المتابع',`<div class="h-info-grid"><div><small>الشخص</small><strong>${esc(state.profile.name)}</strong></div><div><small>حساسية مسجلة — غير متحققة</small><strong>${esc(state.profile.allergies||'غير مسجلة؛ لا يعني عدم وجودها')}</strong></div><div><small>الموقع</small><strong>${hLocationAccess()?'نقطة تمثيلية فقط':'غير مشارك'}</strong></div></div><div class="h-actions">${hButton('عرض ملخص الملف','medical')}${hButton('جهات التواصل','family-link')}</div>`)}</div>`;
+}
+function hNearCard(i){hGeo();const d=hData(),q=i?.queue||hQueue(),names={waiting:'بالدور',timeout:'انتهت مهلته',declined:'اعتذر',claimed:'استلم'};
+ const max=Math.max(1,...q.map(x=>x.km||0));
+ return hCard('مين الأقرب؟',`<p>التنبيه يروح أول لأقرب فرد من الأسرة لكبير السن. عنده <b>٥ دقائق</b> يأكد الاستلام، وإذا ما أكّد أو اعتذر ينتقل الطلب للي بعده.</p><ol class="h-near">${q.map((x,n)=>{const st=i&&i.status!=='closed'&&n===i.qpos&&['family','backup'].includes(i.status)?'now':x.state;return `<li class="h-near-${st}"><span class="h-near-n">${n+1}</span><div><b>${esc(taskName(x.idx))}</b><small>${hKm(x.km)}</small><i style="width:${x.km==null?0:Math.max(8,x.km/max*100)}%"></i></div><em>${st==='now'?'عنده الطلب الحين':i?names[x.state]:n===0?'الأول بالدور':'بالدور'}</em></li>`}).join('')}</ol><div class="h-actions">${hButton('حرّك مواقع الأسرة (مثال)','shuffle-geo')}<label class="h-inline-label"><input type="checkbox" id="h-fast" ${d.fast?'checked':''}> وضع العرض السريع (٥ دقائق = ١٥ ثانية)</label></div><p class="h-small">مواقع الأسرة تمثيلية؛ كل فرد يشارك موقعه للتنبيهات بموافقته، ومن ما شارك يجي آخر الترتيب.</p>`,hPill('٥ دقائق لكل شخص'));
 }
 function hLocationAccess(now=hNow()){const l=hData().location;return l.status==='approved'&&l.until>now}
 function hLocationQuality(now=hNow()){
@@ -365,7 +413,7 @@ function hShowBrief(){modal(`<div class="h-brief">${hBrief()}</div><div class="h
 function hHub(){const i=hOpenIncident(),q=hLocationQuality(),r=hRoutineResult();return `<section class="h-hub"><div><span class="h-kicker">سند • دائرة الطمأنينة</span><h2>الإشارة بداية. الاطمئنان هو النتيجة.</h2><p>اسأل، حدّد المسؤول، وتابع حتى تتضح الحالة.</p></div><div class="h-hub-links"><a href="#safety"><b>${i?H.statusNames[i.status]:'جاهزون للاستجابة'}</b><span>دائرة الاستجابة ←</span></a><a href="#location"><b>${q.text}</b><span>الموقع بموافقة مؤقتة ←</span></a><a href="#insights"><b>${r.text}</b><span>تغيّر الروتين ←</span></a></div><div class="h-actions">${hButton('جرّب قصة العرض','lab-link','primary')}${hButton('ملخص تسليم الرعاية','handoff')}</div><p class="h-small">محاكاة محلية للهاكثون • لا يوجد رصد أو إرسال في الخلفية</p></section>`}
 function hDemoPage(){const d=hData();return `<div class="h-wrap">${hHead('عرض تفاعلي للجنة','قصة سند في دقيقتين','الفكرة: لا نكتفي بتنبيه العائلة؛ نوضح من استلم وكيف انتهت المتابعة.',hButton(d.demo?'العودة لمساحتي':'بدء مساحة عرض مستقلة',d.demo?'end-demo':'start-demo','primary'))}${hNotice()}<div class="h-demo-steps">${[
  ['01','الإشارة','سقوط محتمل، ثم سؤال لكبير السن قبل الانتقال للعائلة.','fall','ابدأ الحدث'],
- ['02','الاستجابة','غياب الرد ينقل الطلب للأساسي ثم البديل. استلام شخص لا يغلق الحالة.','safety-link','افتح دائرة الاستجابة'],
+ ['02','الاستجابة','الطلب يروح لأقرب فرد من الأسرة، وعنده ٥ دقائق يأكد، وإلا ينتقل للي بعده. الاستلام لا يغلق الحالة.','safety-link','افتح دائرة الاستجابة'],
  ['03','الخصوصية','اطلب الموقع، جرّب الموافقة، ثم نقطة قديمة: سند يقول «لا نعرف».','location-link','جرّب الموقع'],
  ['04','السياق','قارن تغير النشاط مع غياب بيانات الساعة، واسأل كبير السن.','insights-link','افتح تغيّر الروتين'],
  ['05','القرب','ملخص صوتي سريع بلهجة سعودية، وأوامر صوتية بمراجعة قبل التنفيذ.','voice-link','افتح استوديو الصوت'],
@@ -420,6 +468,7 @@ render=function(){
  }
  if(d.demo)$('#main').insertAdjacentHTML('afterbegin',`<div class="h-demo-banner">مساحة عرض مستقلة • بيانات وهمية ${hButton('إنهاء العرض والعودة','end-demo')}</div>`);
  if($('#h-actor'))$('#h-actor').onchange=e=>{state.actor=Number(e.target.value);save();render()};
+ if($('#h-fast'))$('#h-fast').onchange=e=>{d.fast=e.target.checked;save();render()};
  if($('#h-radius'))$('#h-radius').onchange=e=>{d.location.radius=Number(e.target.value);save();render()};
  document.querySelectorAll('[name="h-voice-mode"]').forEach(e=>e.onchange=()=>{d.voice.details=e.value==='details';save()});
  if($('#h-voice-rate'))$('#h-voice-rate').onchange=e=>{d.voice.rate=Number(e.target.value);save()};
@@ -432,9 +481,11 @@ function hDispatch(action,value){const i=hOpenIncident(),d=hData();
  if(action==='sos')hStartIncident('sos');
  if(action==='advance'&&i&&i.deadline){i.deadline=hNow();hAdvance(i);render()}
  if(action==='claim')hClaim();
+ if(action==='pass')hPass();
+ if(action==='shuffle-geo'){hGeo();state.family.forEach(f=>{if(f.shareLoc)f.km=Math.round((0.5+Math.random()*9)*10)/10});hAudit('تحدّثت مواقع الأسرة التمثيلية');save();render()}
  if(action==='elder-prompt'||action==='location-prompt'||action==='checkin-prompt'){state.mode='elder';save();go(action==='elder-prompt'?'safety':action==='location-prompt'?'location':'checkin');render()}
  if(action==='im-ok'){if(state.mode!=='elder')return toast('هذا الرد متاح من واجهة كبير السن');hResolve('أنا بخير')}
- if(action==='need-help'){if(!i)hStartIncident('sos');else if(i.status==='verifying'){i.status='family';i.deadline=hNow()+30000;hEvent(i,'طلب كبير السن المساعدة يدويًا في العرض');save();render()}else toast('طلب المساعدة موجود، والعائلة مطلوبة للمتابعة')}
+ if(action==='need-help'){if(!i)hStartIncident('sos');else if(i.status==='verifying'){i.status='family';hEvent(i,'طلب كبير السن المساعدة يدويًا في العرض');hSendTo(i,hNow());save();render()}else toast('طلب المساعدة موجود، والعائلة مطلوبة للمتابعة')}
  if(action==='resolve'&&i&&i.owner===state.actor){modal(`<h2>كيف انتهت المتابعة؟</h2><p>لا تُسجّل «تم الاطمئنان» لمجرد استلام الطلب.</p><form id="h-resolve"><label>النتيجة<select name="result"><option>تواصلنا وتم الاطمئنان</option><option>إنذار عرض غير صحيح</option><option>استُكملت المتابعة خارج النموذج</option></select></label><label>ملاحظة مختصرة<textarea name="note" required maxlength="300" placeholder="ما الذي تحققت منه؟"></textarea></label><div class="h-actions"><button class="primary">تسجيل النتيجة وإغلاقها</button><button type="button" data-action="close">إلغاء</button></div></form>`);$('#h-resolve').onsubmit=e=>{e.preventDefault();const v=new FormData(e.target),note=v.get('note').trim();if(!note)return;close();hResolve(v.get('result')+' — '+note)}}
  if(action==='request-location')hRequestLocation();
  if(action==='approve-location')hApproveLocation();
@@ -465,7 +516,7 @@ H.timer=setInterval(()=>{
  if(i?.deadline&&hAdvance(i))changed=true;
  const quality=hLocationQuality().key;if(H.lastLocationQuality!==undefined&&quality!==H.lastLocationQuality&&['home','location'].includes(page))changed=true;H.lastLocationQuality=quality;
  if(changed){save();render()}
- const counter=document.querySelector('[data-h-countdown]');if(counter&&i?.deadline)counter.textContent=Math.max(0,Math.ceil((i.deadline-hNow())/1000));
+ const counter=document.querySelector('[data-h-countdown]');if(counter&&i?.deadline)counter.textContent=hFmt(i.deadline-hNow());
 },1000);
 render();
 </script><script>/* سند — إضافات 2026-11-01: تجهيز زيارة الطبيب، تنقل أوضح في الجوال، وترتيب الصفحة الرئيسية.
@@ -570,4 +621,182 @@ document.addEventListener('change',e=>{const k=e.target.dataset?.pcheck;if(!k||!
 window.addEventListener('beforeprint',()=>{if(P.printingVisit)$('#printSummary').innerHTML=pVisitSheet()});
 window.addEventListener('afterprint',()=>{P.printingVisit=false});
 render();
+</script><script>/* «اسمع» — مساعد سند الذكي (2026-11-26)
+   يفهم كلام كبير السن والأسرة باللهجة السعودية، ويجاوب من بيانات سند نفسها (الأدوية، المواعيد، الأسرة، المتابعات).
+   يعمل على الجهاز بدون إنترنت ولا يرسل البيانات لأي خدمة. أي إجراء يظهر كزر، وما يتنفذ إلا بضغطة.
+   حدود ثابتة: ما يشخّص، ما يقترح جرعة إضافية أو يغيّر جرعة، وفي الخطر يوجّه للمساعدة فورًا. */
+const A = { last: null };
+
+function aNorm(t) {
+  return String(t || '').toLowerCase()
+    .replace(/[ً-ْـ]/g, '')
+    .replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي')
+    .replace(/[؟?!.,،]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+const AW = {
+  greet: /^(السلام|سلام|هلا|اهلا|مرحبا|صباح|مساء|هاي)/,
+  thanks: /(شكرا|مشكور|يعطيك العافيه|الله يعافيك|جزاك الله)/,
+  danger: /(طحت|طحت|سقطت|وقعت|ما اقدر اقوم|صدري|ضيق|ما اقدر اتنفس|اغمي|دايخ مره|نزيف|الحقوني|طوارئ|اسعاف)/,
+  unwell: /(تعبان|تعبانه|دايخ|دوخه|مريض|ما ني زين|مو زين|راسي|بطني|(^| )الم( |$)|يوجعني|يعورني|حراره|مصدع)/,
+  ok: /^(انا )?(بخير|تمام|طيب|زين|الحمد لله|الحمدلله)( الحمد ?لله)?$/,
+  lonely: /(طفشان|زهقان|وحيد|ابي احد يكلمني|ابي اسولف|ودي اكلم)/,
+  forgot: /(نسيت|فاتتني|فاتني|ما اخذت|ما خذيت|راحت علي)/,
+  extra: /(جرعتين|مرتين|ضاعف|ازيد|اخذ زياده|زيادة|اخذ ثاني)/,
+  meds: /(دوا|دواي|دوايي|ادويه|ادويتي|علاج|علاجي|حبوب|حبه|الحبه|جرعه|جرعات|الجرعه)/,
+  taken: /(اخذت|خذيت|شربت|بلعت|اكدت)/,
+  appt: /(موعد|مواعيد|مراجعه|المستشفى|المستشفي|العياده|الدكتور|دكتور|زياره)/,
+  where: /(وين|فين|موقع|عنوان|كيف اروح)/,
+  ask: /(ابي اسال|ودي اسال|بسال|اسال الدكتور|سؤال للدكتور|قول للدكتور)/,
+  call: /(كلم|اتصل|دق علي|دق على|كلمي|واتساب|ارسل ل)/,
+  today: /(وش عندي|ايش عندي|شنو عندي|يومي|اليوم وش|برنامجي|ملخص|لخص|وش وراي)/,
+  listen: /(اسمعني|اقرا لي|اقرالي|سمعني|بالصوت)/,
+  who: /(مين يتابع|مين الاقرب|مين قريب|مين المسؤول|مين استلم)/,
+  help: /(وش تقدر|ايش تقدر|كيف استخدم|ساعدني في التطبيق|وش تسوي)/,
+  needHelp: /(احتاج مساعده|ابي مساعده|ساعدوني)/
+};
+const ADAY = [[/(صبح|الصباح|الفجر|الفطور)/, '0'], [/(ظهر|الظهر|الغدا)/, '1'], [/(عصر|العصر)/, '1'], [/(مغرب|المسا|المساء|الليل|العشا|النوم)/, '2']];
+
+function aName() { return state.mode === 'elder' ? (state.profile?.name || '') : actorName() }
+function aGreeting() { const h = Number(new Date().toLocaleString('en-US', { hour: 'numeric', hour12: false, timeZone: 'Asia/Riyadh' })); return h < 12 ? 'صباح الخير' : 'مساء الخير' }
+function aTime(t) { if (!t) return ''; const [h, m] = t.split(':').map(Number); const p = h < 12 ? 'الصبح' : h < 15 ? 'الظهر' : h < 18 ? 'العصر' : 'بالليل'; return `${((h + 11) % 12) + 1}${m ? ':' + String(m).padStart(2, '0') : ''} ${p}` }
+function aDate(d) { if (!d) return ''; return new Date(d + 'T12:00:00').toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'long', calendar: 'gregory' }) }
+function aPending() { return state.meds.filter(m => !m.done).sort((a, b) => a.time.localeCompare(b.time)) }
+function aBtn(label, act, val = '', cls = '') { return { label, act, val, cls } }
+
+function aBrief() {
+  const p = aPending(), done = state.meds.filter(m => m.done), v = nextVisit(), i = typeof hOpenIncident === 'function' ? hOpenIncident() : null;
+  const parts = [];
+  if (!state.meds.length) parts.push('ما فيه أدوية مسجلة.');
+  else if (!p.length) parts.push(`كل أدويتك اليوم متأكدة، ${state.meds.length} من ${state.meds.length}. الله يعطيك العافية.`);
+  else parts.push(`تأكدت ${done.length} من ${state.meds.length} جرعات. الجاية: ${esc(p[0].name)} الساعة ${aTime(p[0].time)}.`);
+  if (v) parts.push(`موعدك الجاي ${esc(v.name)} يوم ${aDate(v.date)} الساعة ${aTime(v.time)}.`);
+  if (i) parts.push(`فيه متابعة مفتوحة: ${H.kinds[i.kind]}، ${H.statusNames[i.status]}.`);
+  return parts.join(' ');
+}
+
+function aReply(raw) {
+  const t = aNorm(raw), elder = state.mode === 'elder', name = state.profile?.name || '';
+  // 1) الخطر أولًا: أي إشارة لخطر تتقدم على أي شي ثاني
+  if (AW.danger.test(t)) return {
+    text: `سلامتك يا ${esc(name)}. إذا الحالة خطيرة اتصل بالهلال الأحمر على 997 الحين. وأقدر أبلغ أقرب واحد من عيالك يتابعك، وعنده ٥ دقايق يأكد إنه استلم.`,
+    actions: [aBtn('بلّغ أقرب واحد من الأسرة', 'sos', '', 'h-danger'), aBtn('اتصل 997', 'tel', '997')], urgent: true
+  };
+  if (AW.needHelp.test(t)) return { text: 'أبشر. إذا تبي أبلغ أقرب واحد من الأسرة اضغط الزر، وأنا أتابع لين أحد يستلم.', actions: [aBtn('بلّغ أقرب واحد من الأسرة', 'sos', '', 'h-danger')] };
+  // 2) تحذير الجرعة الإضافية: ما نقترحها أبدًا
+  if (AW.extra.test(t) && AW.meds.test(t)) return { text: 'لا تاخذ جرعة زيادة ولا تضاعفها من نفسك. اسأل الصيدلي أو الطبيب، أو شوف النشرة اللي داخل العلبة. أقدر أضيف سؤالك لقائمة أسئلة الدكتور.', actions: [aBtn('أضف السؤال للدكتور', 'ask-doctor', raw)] };
+  if (AW.forgot.test(t) && AW.meds.test(t)) {
+    const p = aPending();
+    return { text: `ولا يهمك. لا تاخذ جرعتين مع بعض عشان تعوّض. الأفضل تسأل الصيدلي وش تسوي بالجرعة الفايتة${p.length ? `، وجرعتك الجاية ${esc(p[0].name)} الساعة ${aTime(p[0].time)}` : ''}. تبيني أخلي أحد من الأسرة يتابع معك؟`, actions: [aBtn('اطلب متابعة من الأسرة', 'task', 'جرعة فاتت — تحتاج سؤال الصيدلي'), aBtn('أضف السؤال للدكتور', 'ask-doctor', 'وش أسوي إذا فاتتني جرعة؟')] };
+  }
+  if (AW.unwell.test(t)) return { text: `سلامتك ما تشوف شر. أنا ما أقدر أشخّص، بس أقدر أبلغ عيالك يكلمونك، أو أسجل اللي تحس فيه عشان تقوله للدكتور. وإذا التعب شديد اتصل 997.`, actions: [aBtn('أبي أحد يكلمني', 'checkin', 'أبي أحد يكلمني'), aBtn('سجلها للدكتور', 'ask-doctor', raw), aBtn('اتصل 997', 'tel', '997')] };
+  if (AW.greet.test(t)) return { text: `${t.startsWith('السلام') ? 'وعليكم السلام ورحمة الله، ' : ''}${aGreeting()} يا ${esc(aName())}، حيّاك الله. ${aBrief()}`, actions: [aBtn('اسمع يومي', 'day')] };
+  if (AW.thanks.test(t)) return { text: 'العفو، هذا واجبي. أنا هنا متى ما احتجتني.' };
+  if (AW.ok.test(t)) return elder ? { text: 'الحمد لله، الله يديم عليك العافية. أبلغ عيالك إنك بخير؟', actions: [aBtn('طمّن عائلتي', 'checkin', 'بخير الحمد لله', 'primary')] } : { text: 'الحمد لله. لو تبي تطمّن على حالة كبير السن، شوف آخر رد اطمئنان في صفحة تغيّر الروتين.', actions: [aBtn('افتح تغيّر الروتين', 'go', 'insights')] };
+  if (AW.lonely.test(t)) return { text: 'أبشر، أبلغ أقرب واحد من عيالك إنك تبي أحد يكلمك.', actions: [aBtn('أبي أحد يكلمني', 'checkin', 'أبي أحد يكلمني', 'primary')] };
+  if (AW.ask.test(t)) { const q = raw.replace(/^.*?(ابي|ودي|أبي|ودّي|ابغى|أبغى)\s*(اسال|أسأل|اسأل)\s*(الدكتور|الطبيب)?\s*(عن)?\s*/, '').trim() || raw; return { text: `أضيف هالسؤال لقائمة أسئلة الدكتور؟ «${esc(q)}»`, actions: [aBtn('أضفه', 'ask-doctor', q, 'primary')] } }
+  if (AW.who.test(t) && typeof hQueue === 'function') { const q = hQueue(); return { text: q.length ? 'أقرب الأسرة لك الحين: ' + q.map((x, n) => `${n + 1}. ${esc(taskName(x.idx))} (${hKm(x.km)})`).join('، ') + '. التنبيه يروح للأقرب، وعنده ٥ دقايق يأكد، وإلا ينتقل للي بعده.' : 'ما فيه أحد من الأسرة مسجّل.', actions: [aBtn('افتح دائرة الاستجابة', 'go', 'safety')] } }
+  if (AW.call.test(t)) {
+    const f = state.family.map((f, j) => ({ f, j })).find(x => t.includes(aNorm(x.f.name)));
+    if (f) { const n = f.f.phone && normalizePhone(f.f.phone); return n ? { text: `أبشر، تبي تكلم ${esc(f.f.name)}؟ اضغط اللي يناسبك.`, actions: [aBtn('اتصال', 'tel', n, 'primary'), aBtn('واتساب', 'wa', n)] } : { text: `ما عندي رقم ${esc(f.f.name)}. ضيفوه من صفحة دائرة الرعاية.`, actions: [aBtn('افتح دائرة الرعاية', 'go', 'family')] } }
+    return { text: 'مين تبي تكلم؟ ' + state.family.map(f => esc(f.name)).join('، '), chips: state.family.map(f => 'كلم ' + f.name) };
+  }
+  if (AW.listen.test(t)) return { text: aBrief(), actions: [aBtn('شغّل ملخص يومي', 'day', '', 'primary')], speak: true };
+  if (AW.appt.test(t)) {
+    const v = nextVisit();
+    if (!v) return { text: 'ما عندك موعد قادم مسجّل.', actions: elder ? [] : [aBtn('أضف موعد', 'add-appt')] };
+    const vq = (state.visit?.questions || []).filter(q => !q.asked).length;
+    if (AW.where.test(t)) return { text: `موعدك في ${esc(v.hospital || 'المستشفى')}${v.location ? '، ' + esc(v.location) : ''}. والمرافق معك ${esc(v.companion || 'غير محدد')}.`, actions: [aBtn('شوف تفاصيل الموعد', 'go', 'appointments')] };
+    return { text: `موعدك الجاي: ${esc(v.name)} مع ${esc(v.doctor || 'الطبيب')}، يوم ${aDate(v.date)} الساعة ${aTime(v.time)}، ويرافقك ${esc(v.companion || 'أحد من الأسرة')}.${vq ? ` وعندكم ${vq} أسئلة جاهزة للدكتور.` : ''}`, actions: [aBtn('جهّز الزيارة', 'go', elder ? 'appointments' : 'visit'), aBtn('عندي سؤال للدكتور', 'ask-prompt')] };
+  }
+  if (AW.meds.test(t)) {
+    let pick = state.meds.filter(m => t.includes(aNorm(m.name).replace(/^دواء /, '')));
+    for (const [re] of ADAY) if (!pick.length && re.test(t)) pick = state.meds.filter(m => re.test(aNorm(m.name)) || re.test(aNorm(aTime(m.time))));
+    if (pick.length === 1) {
+      const m = pick[0];
+      return m.done ? { text: `${esc(m.name)} متأكد اليوم${m.by ? '، أكّده ' + esc(m.by) : ''}${m.at ? ' الساعة ' + esc(m.at) : ''}. لا تاخذه مرة ثانية.` } : { text: `${esc(m.name)} (${esc(m.dose)}) موعده الساعة ${aTime(m.time)}، وما تأكد للحين. إذا أخذته اضغط تأكيد، وإذا مو متأكد لا تاخذه مرة ثانية واسأل أحد من الأسرة.`, actions: [aBtn('أخذته، أكّد الجرعة', 'confirm', String(m.id), 'primary')] };
+    }
+    const p = aPending();
+    return { text: state.meds.length ? `أدويتك اليوم: ${state.meds.map(m => `${esc(m.name)} الساعة ${aTime(m.time)} ${m.done ? '(متأكد ✓)' : '(ما تأكد)'}`).join('، ')}.` : 'ما فيه أدوية مسجلة.', actions: p.length ? [aBtn(`أكّد ${p[0].name}`, 'confirm', String(p[0].id), 'primary')] : [] };
+  }
+  if (AW.today.test(t)) return { text: aBrief(), actions: [aBtn('اسمع يومي', 'day', '', 'primary')] };
+  if (AW.help.test(t)) return { text: 'أقدر أقولك وش عندك اليوم، وأذكرك بأدويتك وأكد معك الجرعة، وأقولك موعدك ووين، وأسجل أسئلتك للدكتور، وأكلم لك أحد من عيالك، وإذا تعبت أبلغ أقرب واحد منهم. كلمني بلهجتك عادي.' };
+  return { text: 'ما فهمت عليك زين، ممكن تقولها بطريقة ثانية؟ جرّب مثلًا:', chips: aChips() };
+}
+
+function aChips() {
+  const p = aPending(), v = nextVisit(), c = ['وش عندي اليوم؟'];
+  if (p.length) c.push(`أخذت ${p[0].name}؟`);
+  if (v) c.push('متى موعدي؟');
+  c.push(state.mode === 'elder' ? 'أبي أحد يكلمني' : 'مين الأقرب لأبوي؟');
+  c.push('نسيت الدواء وش أسوي؟');
+  return c.slice(0, 5);
+}
+
+function answer(text) {
+  text = String(text).trim(); if (!text) return;
+  const r = aReply(text);
+  messages.push({ text, user: true }, { text: r.text, html: true, actions: r.actions || [], chips: r.chips || null, urgent: r.urgent });
+  A.last = r;
+  renderAssistant();
+  if (state.mode === 'elder' || A.voiceOn) aSpeak(r.text);
+  const chat = $('#assistantPanel .chat'); if (chat) chat.scrollTop = chat.scrollHeight;
+}
+function aPlain(html) { const d = document.createElement('div'); d.innerHTML = html; return d.textContent }
+function aSpeak(html) { try { if (typeof isNamaaLocal === 'function' && isNamaaLocal()) return speakText(aPlain(html)); const ar = window.speechSynthesis?.getVoices().some(v => /^ar/i.test(v.lang)); if (ar) speakDeviceText(aPlain(html)) } catch { } }
+
+function aWelcome() {
+  if (messages.length === 1 && !messages[0].user && !messages[0].fresh) {
+    messages[0] = { text: `${aGreeting()} يا ${esc(aName())}، أنا «اسمع». ${aBrief()} كلمني بلهجتك أو اختر من تحت.`, html: true, fresh: true };
+  }
+}
+
+renderAssistant = function () {
+  const panel = $('#assistantPanel'); panel.hidden = !assistantOpen; $('#assistantLauncher').setAttribute('aria-expanded', String(assistantOpen)); if (!assistantOpen) return;
+  aWelcome();
+  const bubble = (m, n) => `<div class="bubble ${m.user ? 'user' : ''} ${m.urgent ? 'a-urgent' : ''}">${m.html ? m.text : esc(m.text)}${!m.user && m.actions?.length ? `<div class="a-acts">${m.actions.map(a => `<button class="${a.cls || ''}" data-a="${a.act}" data-v="${esc(a.val)}">${esc(a.label)}</button>`).join('')}</div>` : ''}${!m.user && m.chips ? `<div class="chips">${m.chips.map(c => `<button data-question="${esc(c)}">${esc(c)}</button>`).join('')}</div>` : ''}</div>`;
+  panel.innerHTML = `<div class="section-head"><div><h2>اسمع <span class="pill">معك</span></h2><span class="small">كلمني بلهجتك عن أدويتك ومواعيدك وأهلك</span></div><button data-action="closeAssistant" aria-label="إغلاق اسمع">✕</button></div>
+  <div class="note">يفهم كلامك ويجاوب من بيانات سند على جهازك. أي إجراء يظهر لك كزر وما يتنفذ إلا إذا ضغطت عليه. ما يشخّص، وما يغيّر جرعة أو يقترح جرعة زيادة.</div>
+  <div class="a-voicebar"><button data-a="mic" class="primary" aria-label="تكلّم">🎙 تكلّم</button><button data-a="voice-toggle" aria-pressed="${A.voiceOn || state.mode === 'elder'}">${A.voiceOn || state.mode === 'elder' ? '🔊 الرد بالصوت: شغّال' : '🔈 الرد بالصوت: طافي'}</button><button data-voice="fahad">◖ ترحيب فهد</button></div>
+  <div class="chat" role="log" aria-live="polite">${messages.map(bubble).join('')}</div>
+  <div class="chips">${aChips().map(c => `<button data-question="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+  <form id="floatingChatForm" class="chat-form"><input id="assistantInput" aria-label="رسالتك إلى اسمع" name="message" maxlength="500" required placeholder="مثلًا: وش عندي اليوم؟"><button class="primary">إرسال</button></form>`;
+  $('#floatingChatForm').onsubmit = e => { e.preventDefault(); answer(new FormData(e.target).get('message')); e.target.reset(); $('#assistantInput')?.focus() };
+  const chat = $('#assistantPanel .chat'); if (chat) chat.scrollTop = chat.scrollHeight;
+};
+
+function aMic() {
+  const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Rec) return toast('المتصفح ما يدعم التعرف على الصوت. اكتب سؤالك وأنا أجاوبك');
+  try { stopVoice() } catch { }
+  const r = new Rec(); r.lang = 'ar-SA'; r.interimResults = false; r.continuous = false;
+  const b = document.querySelector('[data-a="mic"]'); if (b) { b.textContent = '… أسمعك'; b.disabled = true }
+  r.onresult = e => answer(e.results[0][0].transcript);
+  r.onerror = () => toast('ما وصلني صوت واضح، جرّب مرة ثانية');
+  r.onend = () => { const b = document.querySelector('[data-a="mic"]'); if (b) { b.textContent = '🎙 تكلّم'; b.disabled = false } };
+  r.start();
+}
+
+function aAct(act, val) {
+  const elder = state.mode === 'elder';
+  if (act === 'mic') return aMic();
+  if (act === 'voice-toggle') { A.voiceOn = !A.voiceOn; return renderAssistant() }
+  if (act === 'tel') { location.href = 'tel:' + val; return }
+  if (act === 'wa') { window.open('https://wa.me/' + val.replace('+', ''), '_blank', 'noopener'); return }
+  if (act === 'go') { toggleAssistant(false); go(val); return }
+  if (act === 'day') { playDaySummary(); return }
+  if (act === 'confirm') { toggleAssistant(false); confirmMed(Number(val)); return }
+  if (act === 'sos') { toggleAssistant(false); if (typeof hDispatch === 'function') hDispatch('need-help'); return }
+  if (act === 'checkin') {
+    if (elder && typeof hDispatch === 'function') { hDispatch('checkin', val); messages.push({ text: val === 'أبي أحد يكلمني' ? 'أبشر، فتحت طلب متابعة لأهلك يكلمونك.' : 'سجلت إنك بخير، وأهلك يشوفونه.' }); renderAssistant(); return }
+    toast('هذا الرد من واجهة كبير السن'); return;
+  }
+  if (act === 'task') { toggleAssistant(false); addTask(val, 'assistant', null); return }
+  if (act === 'ask-prompt') { messages.push({ text: 'قول سؤالك وأنا أسجله للدكتور. ابدأ بـ «أبي أسأل الدكتور…»' }); renderAssistant(); return }
+  if (act === 'ask-doctor') {
+    if (typeof pAddQ === 'function') { pAddQ(val); messages.push({ text: `سجلت سؤالك للدكتور: «${esc(val)}». بيطلع في ورقة الزيارة.`, html: true }); renderAssistant(); }
+    return;
+  }
+  if (act === 'add-appt') { toggleAssistant(false); form('addAppointment'); return }
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-a]'); if (!b || !activeSpace) return; aAct(b.dataset.a, b.dataset.v) });
 </script></body></html>
