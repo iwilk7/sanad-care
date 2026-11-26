@@ -165,16 +165,85 @@ html[data-theme=dark]{--p-paper:#20352a;--p-soft:#1b2e24;--p-amber:#e9c48f}
 html[data-theme=dark] .p-nafath button{background:#26332c;border-color:#3d4b43;color:#9aa59f}
 html[data-theme=dark] .p-nafath-ic,html[data-theme=dark] .p-nafath em{background:#33423a;color:#b3bdb7}
 html[data-theme=dark] .p-nafath b{color:#c3ccc7}
-</style></head><body><main id="welcomeScreen" class="welcome-screen" hidden></main><aside><a class="brand" href="#home"><span class="logo">س</span><span>سند<small>SANAD CARE</small></span></a><p class="side-label">معك، ومع من تحب</p><nav id="nav"></nav><div class="side-bottom"><span class="online"></span> كلنا حولك<div>نموذج الابتكار الصحي · 2027</div></div></aside><div class="workspace"><header><div><span class="small">مساحة الرعاية العائلية</span><strong id="familyHeading"></strong></div><div class="header-actions"><button id="themeToggle" aria-label="تبديل الوضع النهاري والليلي" aria-pressed="false">☾ ليل</button><button id="role">◉ واجهة كبير السن</button><button id="exitDemo" title="العودة لاختيار المساحة">خروج تجريبي</button></div></header><main id="main"></main><footer>سند، لأن الرعاية تبدأ بالقرب. <span>نموذج تجريبي — البيانات محفوظة في هذا المتصفح فقط</span></footer></div><button id="assistantLauncher" class="assistant-launch" aria-label="فتح مساعد اسمع" aria-expanded="false" aria-controls="assistantPanel"><span aria-hidden="true">◉</span>اسمع</button><section id="assistantPanel" class="assistant-panel" aria-label="مساعد اسمع" hidden></section><article id="printSummary" aria-label="الملخص الصحي للطباعة"></article><div id="toast" role="status"></div><dialog id="modal"></dialog><script>const $=s=>document.querySelector(s);const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+</style><style>/* فهد — المكالمة الحيّة، واتساب، ملخص الأسرة */
+.f-anchor{display:inline-block;background:var(--mint);color:var(--green);border-radius:999px;padding:1px 9px;font-size:.82em;font-weight:600;margin-inline-end:4px}
+.f-call{border:0;border-radius:28px;padding:0;width:min(420px,94vw);background:#fff;color:var(--ink);box-shadow:0 30px 80px #0b2a2140}
+.f-call::backdrop{background:#0e2b2399;backdrop-filter:blur(4px)}
+.f-call-in{padding:30px 26px 22px;text-align:center;display:grid;gap:10px;justify-items:center}
+.f-call h2{margin:4px 0 0;font-size:1.6rem}
+.f-state{margin:0;color:var(--muted);min-height:1.5em;font-weight:600}
+.f-orb{--c:var(--green);width:118px;height:118px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#2f8a6d,var(--green) 70%);color:#fff;font-size:2.6rem;font-weight:700;position:relative;box-shadow:0 0 0 0 #175b4833}
+.f-orb span{position:relative;z-index:1}
+.f-orb.is-listening{animation:fPulse 1.8s ease-out infinite}
+.f-orb.is-speaking{animation:fTalk .55s ease-in-out infinite alternate}
+.f-orb.is-thinking::after,.f-orb.is-connecting::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:3px solid transparent;border-top-color:var(--green);animation:fSpin 1s linear infinite}
+.f-orb.mini{width:52px;height:52px;font-size:1.3rem;flex:none}
+@keyframes fPulse{0%{box-shadow:0 0 0 0 #175b4855}100%{box-shadow:0 0 0 26px #175b4800}}
+@keyframes fTalk{from{transform:scale(1)}to{transform:scale(1.07)}}
+@keyframes fSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.f-orb{animation:none!important}.f-orb::after{animation:none!important}}
+.f-lines{width:100%;max-height:190px;overflow:auto;display:grid;gap:6px;text-align:start}
+.f-lines p{margin:0;padding:8px 12px;border-radius:14px;background:var(--mint);line-height:1.7}
+.f-lines p.user{background:#f1f2ee;justify-self:end}
+.f-lines p.agent{justify-self:start}
+.f-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.f-btns button{min-height:48px;padding-inline:22px;border-radius:999px}
+.f-call .note{text-align:start;width:100%}
+.f-call .small{margin:2px 0 0;color:var(--muted);font-size:.82rem;line-height:1.6}
+.f-elder{display:flex;align-items:center;gap:14px;width:100%;text-align:start;padding:16px 18px;border-radius:22px;border:2px solid var(--green);background:var(--mint);color:var(--ink);margin:6px 0 14px;cursor:pointer}
+.f-elder b{display:block;font-size:1.35rem}
+.f-elder small{display:block;color:var(--muted);font-size:1rem;margin-top:2px}
+.f-field{display:grid;gap:6px;margin-top:14px;font-weight:600}
+.f-field input{font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:12px;text-align:left}
+.f-proxy-status{margin-top:10px}
+.f-log{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.f-log li{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--mint)}
+.f-log li b{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--green)}
+.f-log li.k-urgent{background:#fbeae6}.f-log li.k-urgent b{color:#a44535}
+.f-log time{color:var(--muted);font-size:.85rem}
+/* واتساب (محاكاة) */
+.f-wa-wrap{display:grid;grid-template-columns:minmax(300px,400px) 1fr;gap:22px;align-items:start}
+.f-phone{border-radius:30px;overflow:hidden;border:8px solid #1d2b26;background:#efe7dd;display:grid;grid-template-rows:auto 1fr auto auto;height:min(720px,80vh);box-shadow:0 20px 50px #0b2a2126}
+.f-wa-head{display:flex;gap:10px;align-items:center;background:#075e54;color:#fff;padding:12px 14px}
+.f-wa-head small{display:block;opacity:.8;font-size:.78rem}
+.f-wa-av{width:38px;height:38px;border-radius:50%;background:#fff;color:#075e54;display:grid;place-items:center;font-weight:700}
+.f-wa-chat{overflow:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px;background-image:radial-gradient(#d9cfc3 1px,transparent 1px);background-size:18px 18px}
+.f-wa-msg{max-width:84%;align-self:flex-start;background:#fff;border-radius:12px;border-start-start-radius:3px;padding:8px 10px 4px;box-shadow:0 1px 1px #0000001a;color:#1f2c26}
+.f-wa-msg.me{align-self:flex-end;background:#d9fdd3;border-start-start-radius:12px;border-start-end-radius:3px}
+.f-wa-msg p{margin:2px 0;line-height:1.7;font-size:.95rem}
+.f-wa-msg .f-tr{color:#4b5a53;font-size:.88rem}
+.f-wa-msg time{display:block;text-align:end;font-size:.7rem;color:#667781}
+.f-voice{display:flex;align-items:center;gap:8px;min-width:200px}
+.f-voice button{width:34px;height:34px;border-radius:50%;border:0;background:#075e54;color:#fff;flex:none;padding:0;min-height:0}
+.f-wave{display:flex;align-items:center;gap:2px;flex:1;direction:ltr}
+.f-wave i{display:block;width:3px;border-radius:2px;background:#8aa59b}
+.f-voice small{color:#667781;font-size:.72rem}
+.f-wa-btns{display:grid;gap:4px;margin:6px -10px -4px;border-top:1px solid #e9edef}
+.f-wa-btns button{border:0;background:none;color:#027eb5;padding:8px;font-weight:600;min-height:0;border-radius:0}
+.f-wa-btns button+button{border-top:1px solid #e9edef}
+.f-wa-chips{display:flex;gap:6px;overflow-x:auto;padding:8px 10px 0;background:#f0f2f5}
+.f-wa-chips button{white-space:nowrap;border-radius:999px;background:#fff;border:1px solid #d6dbd9;padding:6px 12px;font-size:.85rem;min-height:0}
+.f-wa-bar{display:flex;gap:8px;padding:8px 10px 12px;background:#f0f2f5}
+.f-wa-bar input{flex:1;font:inherit;border:0;border-radius:999px;padding:10px 14px;background:#fff}
+.f-wa-mic{width:46px;height:46px;border-radius:50%;border:0;background:#00a884;color:#fff;font-size:1.2rem;padding:0;min-height:0}
+.f-wa-mic.rec{background:#a44535;animation:fPulse 1.2s infinite}
+.f-wa-side ol{padding-inline-start:20px;line-height:2}
+@media (max-width:820px){.f-wa-wrap{grid-template-columns:1fr}.f-phone{height:70vh}}
+[data-theme=dark] .f-call{background:#14241f;color:#e8f0ec}
+[data-theme=dark] .f-lines p{background:#1f3a31}[data-theme=dark] .f-lines p.user{background:#26332e}
+[data-theme=dark] .f-elder,[data-theme=dark] .f-log li{background:#1f3a31;color:#e8f0ec}
+[data-theme=dark] .f-anchor{background:#1f3a31;color:#9fd9c2}
+[data-theme=dark] .f-field input{background:#14241f;color:#e8f0ec;border-color:#2c4a40}
+</style></head><body><main id="welcomeScreen" class="welcome-screen" hidden></main><aside><a class="brand" href="#home"><span class="logo">س</span><span>سند<small>SANAD CARE</small></span></a><p class="side-label">معك، ومع من تحب</p><nav id="nav"></nav><div class="side-bottom"><span class="online"></span> كلنا حولك<div>نموذج الابتكار الصحي · 2027</div></div></aside><div class="workspace"><header><div><span class="small">مساحة الرعاية العائلية</span><strong id="familyHeading"></strong></div><div class="header-actions"><button id="themeToggle" aria-label="تبديل الوضع النهاري والليلي" aria-pressed="false">☾ ليل</button><button id="role">◉ واجهة كبير السن</button><button id="exitDemo" title="العودة لاختيار المساحة">خروج تجريبي</button></div></header><main id="main"></main><footer>سند، لأن الرعاية تبدأ بالقرب. <span>نموذج تجريبي — البيانات محفوظة في هذا المتصفح فقط</span></footer></div><button id="assistantLauncher" class="assistant-launch" aria-label="فتح مساعد فهد" aria-expanded="false" aria-controls="assistantPanel"><span aria-hidden="true">◉</span>فهد</button><section id="assistantPanel" class="assistant-panel" aria-label="مساعد فهد" hidden></section><article id="printSummary" aria-label="الملخص الصحي للطباعة"></article><div id="toast" role="status"></div><dialog id="modal"></dialog><script>const $=s=>document.querySelector(s);const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const seed=()=>({meds:[{id:1,name:'دواء الصباح',dose:'قرص واحد · حسب الوصفة التجريبية',time:'08:00',done:true,by:'مشاعل',at:'08:05'},{id:2,name:'دواء الظهر',dose:'قرص واحد · حسب الوصفة التجريبية',time:'13:00',done:false},{id:3,name:'دواء المساء',dose:'قرص واحد · حسب الوصفة التجريبية',time:'20:00',done:false}],appointments:[{name:'متابعة طب الأسرة',doctor:'د. أحمد · العيادة العامة',date:'2027-01-24',time:'10:30',companion:'مشاعل',hospital:'مستشفى سند التجريبي',location:'الرياض — عنوان افتراضي للعرض'}],family:[{name:'مشاعل',relation:'ابنة · المسؤول الأساسي'},{name:'عبدالله',relation:'ابن · المسؤول البديل'}],notes:'يفضل التواصل بصوت واضح وهادئ. العائلة تتابع تجهيز الزيارة قبل الموعد بيوم.',notesUpdated:'',logs:[],mode:'family',care:'shared',demo:0});let state;try{state=JSON.parse(localStorage.getItem('sanad-v1'))||seed()}catch{state=seed()}state.family=state.family.map(f=>({...f,name:f.name==='نورة'?'مشاعل':f.name}));state.meds=state.meds.map(m=>({...m,by:m.by==='نورة'?'مشاعل':m.by}));state.appointments=state.appointments.map(a=>({...a,companion:a.companion==='نورة'?'مشاعل':a.companion}));state.logs=state.logs.map(l=>l.replaceAll('نورة','مشاعل'));if(state.notes===undefined)state.notes='';let assistantOpen=false;let page='home';const routes=[['home','⌂','نظرة عامة'],['meds','◷','الأدوية والجرعات'],['health','♡','الملف الصحي'],['appointments','▦','المواعيد'],['family','♧','العائلة'],['tasks','☑','المتابعة العائلية'],['watch','♡','الصحة والساعة'],['settings','⚙','الإعدادات']];let messages=[{text:'يا هلا، أنا اسمع، مساعدك. أقدر أوضح لك طريقة متابعة الأدوية والمواعيد. هذه محادثة تجريبية بإجابات جاهزة، وليست استشارة طبية.'}];
 function save(){if(activeSpace)localStorage.setItem('sanad-space-'+activeSpace,JSON.stringify(state));else localStorage.setItem('sanad-v1',JSON.stringify(state))}function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>$('#toast').style.display='none',3200)}function go(p){location.hash=p}function title(t,p,button=''){return `<div class="page-head"><div><span class="eyebrow">رعاية أقرب، حياة أطمأن</span><h1>${t}</h1><p>${p}</p></div>${button}</div>`}function card(t,body,action=''){return `<section class="card"><div class="section-head"><h2>${t}</h2>${action}</div>${body}</section>`}function medHTML(m){return `<div class="med"><span class="icon">◷</span><div class="med-info"><strong>${esc(m.name)}</strong><p>${esc(m.dose)}</p><span class="time">${esc(m.time)} ${m.done?' · أكّدها '+esc(m.by)+'، '+esc(m.at):''}</span></div>${!m.done?`<button data-dose-task="${m.id}">طلب متابعة</button>`:''}${m.done?`<button class="pill" data-undo="${m.id}" title="تصحيح التأكيد">✓ تم التأكيد</button>`:`<button class="primary" data-confirm="${m.id}">${state.mode==='elder'?'أخذت الدواء':'تأكيد الجرعة'}</button>`}</div>`}function appointmentHTML(a){let d=new Date(a.date+'T12:00:00');return `<div class="appointment"><div class="date"><strong>${d.getDate()}</strong>${d.toLocaleDateString('ar-SA',{month:'short',calendar:'gregory'})}</div><div><h3>${esc(a.name)}</h3><p>${esc(a.doctor)} · ${esc(a.time)}</p><p>المرافق: ${esc(a.companion)}</p><p>المستشفى: ${esc(a.hospital||'غير محدد')}</p><p>الموقع: ${esc(a.location||'لم يحدد بعد')}</p>${a.location&&!a.location.includes('افتراضي')?`<a class="location-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((a.hospital||'')+' '+a.location)}" target="_blank" rel="noopener noreferrer">عرض الموقع على الخريطة ↗</a>`:''}<br><button class="remove-appointment" data-remove-appointment="${state.appointments.indexOf(a)}">حذف الموعد</button></div></div>`}function familyHTML(){return state.family.map((f,i)=>`<div class="family"><span class="avatar">${esc(f.name[0])}</span><div><h3>${esc(f.name)}</h3><p>${esc(f.relation)}</p></div><span class="pill ${i?'gray':''}">${i?'متابع':'مسؤول اليوم'}</span><div class="contact-actions">${contactLinks(f.phone,true)}<button data-contact="${i}">${f.phone?'تعديل الرقم':'إضافة رقم'}</button></div></div>`).join('')}
 function render(){stopVoice();if(!activeSpace){renderWelcome();return}document.body.classList.remove('at-welcome');$('#welcomeScreen').hidden=true;ensureState();$('#familyHeading').innerHTML='رعاية '+esc(state.profile.name)+' <span class="tag">دخول تجريبي · محلي</span>';document.documentElement.dataset.theme=state.theme||'light';$('#themeToggle').textContent=state.theme==='dark'?'☀ نهار':'☾ ليل';$('#themeToggle').setAttribute('aria-pressed',String(state.theme==='dark'));page=location.hash.slice(1)||'home';if(!routes.some(r=>r[0]===page))page='home';$('#nav').innerHTML=routes.map(r=>`<a href="#${r[0]}" class="${page===r[0]?'active':''}" ${page===r[0]?'aria-current="page"':''}><b>${r[1]}</b>${r[2]}</a>`).join('');$('#role').textContent=state.mode==='elder'?'◉ واجهة العائلة':'◉ واجهة كبير السن';$('#main').className=state.mode==='elder'?'elder':'';let done=state.meds.filter(m=>m.done).length;let body='';
-if(page==='home'){body=title(state.mode==='elder'?'حياك الله، '+state.profile.name:'صباح الخير، '+actorName(),'خطوة صغيرة منك، تعني الكثير لمن تحب.',`<button data-action="demo">▷ تجربة سيناريو العرض</button>`)+`<section class="hero"><div><span class="eyebrow">◉ أنت وعائلتك، يد واحدة</span><h2>${state.mode==='elder'?'يومك أسهل، وإحنا معك':'رعاية '+esc(state.profile.name)+'، أقرب إليك'}</h2><p>كل تفاصيل يومه في مكان واحد. تابعوا مواعيده، واطمئنوا على أدويته، وتقاسموا الرعاية بمحبة.</p><button data-go="meds">متابعة جرعات اليوم ←</button></div><div class="hero-art" aria-hidden="true"><span>♡</span></div></section><div class="attention"><div><strong>${state.meds.length-done?'متابعة بسيطة، وطمأنينة أكبر':'اكتملت تأكيدات يوم العرض'}</strong><p>${state.meds.length-done} جرعات لم يُسجّل تأكيدها في جدول العرض. تحققوا من حالتها قبل أي إجراء.</p></div><button data-go="meds">راجع الجرعات ←</button></div><div class="quick-actions"><button data-action="addAppointment">＋ موعد جديد<small>المستشفى، الموقع والمرافق</small></button><button data-go="health">♡ ملاحظات الرعاية<small>تفاصيل تساعد الجميع</small></button><button data-action="openAssistant">◉ اسمع<small>مساعدك قريب بكل صفحة</small></button></div><div class="stats"><div class="stat"><span class="icon">✓</span><div><strong>${done} <span class="small">/ ${state.meds.length}</span></strong><p>جرعات تم تأكيدها في يوم العرض</p></div></div><div class="stat"><span class="icon">▦</span><div><strong>${state.appointments.length}</strong><p>مواعيد مسجّلة</p></div></div><div class="stat"><span class="icon">♧</span><div><strong>${state.family.length}</strong><p>أفراد في دائرة الرعاية</p></div></div></div><div class="grid"><div>${card('جدول الأدوية',state.meds.map(medHTML).join(''),'<a href="#meds">عرض الكل ←</a>')}${card('آخر المتابعات',state.logs.length?state.logs.slice(-3).reverse().map(l=>`<div class="log">${esc(l)}</div>`).join(''):'<div class="empty">أي تأكيد جديد سيظهر هنا مع اسم المتابع ووقته.</div>')}</div><div>${card('الموعد القادم',state.appointments.slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(0,1).map(appointmentHTML).join(''),'<a href="#appointments">التفاصيل ←</a>')}${card('دائرة الرعاية',familyHTML(),'<a href="#family">إدارة ←</a>')}<div class="note">♡ متابعة مشتركة، وطمأنينة أكبر.<br>غياب تأكيد الجرعة يعني أنها تحتاج تحققًا، وليس بالضرورة أنها لم تؤخذ.</div></div></div>`}
+if(page==='home'){body=title(state.mode==='elder'?'حياك الله، '+state.profile.name:'صباح الخير، '+actorName(),'خطوة صغيرة منك، تعني الكثير لمن تحب.',`<button data-action="demo">▷ تجربة سيناريو العرض</button>`)+`<section class="hero"><div><span class="eyebrow">◉ أنت وعائلتك، يد واحدة</span><h2>${state.mode==='elder'?'يومك أسهل، وإحنا معك':'رعاية '+esc(state.profile.name)+'، أقرب إليك'}</h2><p>كل تفاصيل يومه في مكان واحد. تابعوا مواعيده، واطمئنوا على أدويته، وتقاسموا الرعاية بمحبة.</p><button data-go="meds">متابعة جرعات اليوم ←</button></div><div class="hero-art" aria-hidden="true"><span>♡</span></div></section><div class="attention"><div><strong>${state.meds.length-done?'متابعة بسيطة، وطمأنينة أكبر':'اكتملت تأكيدات يوم العرض'}</strong><p>${state.meds.length-done} جرعات لم يُسجّل تأكيدها في جدول العرض. تحققوا من حالتها قبل أي إجراء.</p></div><button data-go="meds">راجع الجرعات ←</button></div><div class="quick-actions"><button data-action="addAppointment">＋ موعد جديد<small>المستشفى، الموقع والمرافق</small></button><button data-go="health">♡ ملاحظات الرعاية<small>تفاصيل تساعد الجميع</small></button><button data-action="openAssistant">◉ فهد<small>مساعدك الصوتي بكل صفحة</small></button></div><div class="stats"><div class="stat"><span class="icon">✓</span><div><strong>${done} <span class="small">/ ${state.meds.length}</span></strong><p>جرعات تم تأكيدها في يوم العرض</p></div></div><div class="stat"><span class="icon">▦</span><div><strong>${state.appointments.length}</strong><p>مواعيد مسجّلة</p></div></div><div class="stat"><span class="icon">♧</span><div><strong>${state.family.length}</strong><p>أفراد في دائرة الرعاية</p></div></div></div><div class="grid"><div>${card('جدول الأدوية',state.meds.map(medHTML).join(''),'<a href="#meds">عرض الكل ←</a>')}${card('آخر المتابعات',state.logs.length?state.logs.slice(-3).reverse().map(l=>`<div class="log">${esc(l)}</div>`).join(''):'<div class="empty">أي تأكيد جديد سيظهر هنا مع اسم المتابع ووقته.</div>')}</div><div>${card('الموعد القادم',state.appointments.slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(0,1).map(appointmentHTML).join(''),'<a href="#appointments">التفاصيل ←</a>')}${card('دائرة الرعاية',familyHTML(),'<a href="#family">إدارة ←</a>')}<div class="note">♡ متابعة مشتركة، وطمأنينة أكبر.<br>غياب تأكيد الجرعة يعني أنها تحتاج تحققًا، وليس بالضرورة أنها لم تؤخذ.</div></div></div>`}
 if(page==='meds')body=title('الأدوية والجرعات','جدول تجريبي ثابت ليوم العرض، دون توصيات دوائية.',`<button class="primary" data-action="addMed">＋ إضافة دواء</button>`)+card('جرعات يوم العرض',state.meds.map(medHTML).join(''))+`<div class="note">تأكيد الجرعة يسجل من تابعها ومتى. اضغط على «تم التأكيد» لتصحيح تسجيل خاطئ مع حفظ أثر التصحيح.</div>`;
 if(page==='health')body=title('الملف الصحي','صورة واضحة، لرعاية أكثر قربًا.',`<button class="primary" data-action="summary">▤ الملخص الصحي والطباعة</button>`)+card(esc(state.profile.name)+' · '+esc(state.profile.age)+' سنة',`<span class="pill">ملف افتراضي للعرض</span><div class="detail-grid" style="margin-top:22px"><div class="detail"><small>الأمراض المزمنة</small>${esc(state.profile.conditions||'غير مسجل')}</div><div class="detail"><small>الحساسية المسجّلة</small>${esc(state.profile.allergies||'غير مسجل')}</div><div class="detail"><small>مصدر البيانات</small>إدخال عائلي تجريبي — لم يراجعه طبيب</div><div class="detail"><small>نمط الرعاية</small>${state.care==='shared'?'عائلتي تتابع معي':'أتابع بنفسي'}</div></div>`)+card('ملاحظات عامة',`<p>اكتبوا ما يساعد على الرعاية اليومية في هذا النموذج التجريبي.</p><form id="notesForm"><label for="generalNotes">ملاحظات العائلة</label><textarea id="generalNotes" class="notes-field" name="notes" maxlength="2000" placeholder="تفضيلات التواصل، احتياجات الزيارة، أو ملاحظات المتابعة…">${esc(state.notes||'')}</textarea><div class="note-meta">${state.notesUpdated?'آخر تحديث: '+esc(state.notesUpdated):'الملاحظات محفوظة محليًا في متصفحك'}</div><button class="primary">حفظ الملاحظات</button></form>`)+card('تعديل بيانات الملف',profileForm())+hospitalCard()+card('المستندات الطبية','<div class="empty">لم تُرفق تقارير. هذه النسخة لا تحفظ مستندات طبية حقيقية.</div>');
 if(page==='appointments')body=title('المواعيد','رتّبوا الزيارة، وحددوا من يرافقه.',`<button class="primary" data-action="addAppointment">＋ إضافة موعد</button>`)+card('المواعيد المسجّلة',state.appointments.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(appointmentHTML).join(''))+hospitalCard()+card('الطبيب المسؤول',`<div class="family"><span class="avatar">أ</span><div><h3>د. أحمد · طب الأسرة</h3><p>شخصية تجريبية — لا توجد خدمة طبية متصلة</p></div></div><button data-action="doctor">طلب تواصل تجريبي</button>`);
 if(page==='family')body=title('دائرة الرعاية','كل شخص يعرف دوره، وتواصلكم أقرب بخطوة.',`<button class="primary" data-action="addFamily">＋ إضافة فرد</button>`)+card('أفراد العائلة',familyHTML())+`<div class="note">الإضافة هنا محلية للتجربة، ولا ترسل دعوات أو رسائل فعلية. الحسابات المشتركة والمزامنة بين الأجهزة تحتاج ربطًا لاحقًا.</div>`;
-if(page==='assistant')body=title('اسمع','كلام قريب، ومعلومة واضحة.')+card('✧ مساعد تجريبي باللهجة السعودية',`<div class="note">إجابات معدّة مسبقًا لشرح الفكرة. المساعد غير متصل بنموذج ذكاء اصطناعي ولا يشخّص أو يعدّل العلاج.</div><div class="chat" style="margin-top:20px">${messages.map(m=>`<div class="bubble ${m.user?'user':''}">${esc(m.text)}</div>`).join('')}</div><div class="chips"><button data-question="كيف أؤكد الجرعة؟">كيف أؤكد الجرعة؟</button><button data-question="كيف أضيف موعد؟">كيف أضيف موعد؟</button><button data-question="عندي سؤال عن أعراض الدواء">أعراض الدواء</button></div><form class="chat-form" id="chatForm"><input aria-label="رسالتك لاسمع" name="message" placeholder="اكتب سؤالك هنا…" required maxlength="500"><button class="primary">إرسال</button></form>`);
+if(page==='assistant')body=title('اسمع','كلام قريب، ومعلومة واضحة.')+card('✧ مساعد تجريبي باللهجة السعودية',`<div class="note">إجابات معدّة مسبقًا لشرح الفكرة. المساعد غير متصل بنموذج ذكاء اصطناعي ولا يشخّص أو يعدّل العلاج.</div><div class="chat" style="margin-top:20px">${messages.map(m=>`<div class="bubble ${m.user?'user':''}">${esc(m.text)}</div>`).join('')}</div><div class="chips"><button data-question="كيف أؤكد الجرعة؟">كيف أؤكد الجرعة؟</button><button data-question="كيف أضيف موعد؟">كيف أضيف موعد؟</button><button data-question="عندي سؤال عن أعراض الدواء">أعراض الدواء</button></div><form class="chat-form" id="chatForm"><input aria-label="رسالتك لفهد" name="message" placeholder="اكتب سؤالك هنا…" required maxlength="500"><button class="primary">إرسال</button></form>`);
 if(page==='settings')body=title('إعدادات الرعاية','تجربة تناسب احتياجك واحتياج عائلتك.')+card('طريقة المتابعة',`<div class="switch-row"><div><h3>من يتابع الرعاية؟</h3><p>يحدد جهة التنبيه في سيناريو العرض.</p></div><select id="care"><option value="shared" ${state.care==='shared'?'selected':''}>عائلتي تتابع معي</option><option value="self" ${state.care==='self'?'selected':''}>أتابع بنفسي</option></select></div><div class="switch-row"><div><h3>التذكيرات التلقائية وApple</h3><p>تحتاج ربطًا خارجيًا — غير مفعلة في النموذج.</p></div><span class="pill gray">قريبًا</span></div>`)+card('إدارة بيانات العرض',`<p>البيانات محفوظة على هذا الجهاز، ولا تستخدم هذه النسخة لبيانات صحية حقيقية.</p><button style="margin-top:18px" data-action="reset">إعادة ضبط البيانات التجريبية</button>`);if(page==='tasks')body=tasksPage();if(page==='watch')body=watchPage();if(page==='home')body=changesCard()+body;if(state.mode==='elder')body=elderPage();document.body.classList.remove('elder-mode');if(state.mode==='elder')document.body.classList.add('elder-mode');$('#main').innerHTML=body;bindProfileForm();if($('#actorSelect'))$('#actorSelect').onchange=e=>{state.actor=Number(e.target.value);save();render()};if($('#notesForm'))$('#notesForm').onsubmit=e=>{e.preventDefault();state.notes=new FormData(e.target).get('notes').trim();state.notesUpdated=new Date().toLocaleString('ar-SA',{timeZone:'Asia/Riyadh'});change(actorName()+' حدّث الملاحظات العامة');save();render();toast('تم حفظ الملاحظات العامة')};renderAssistant();if($('#care'))$('#care').onchange=e=>{state.care=e.target.value;save();toast('تم تحديث طريقة الرعاية')};if($('#chatForm'))$('#chatForm').onsubmit=e=>{e.preventDefault();answer(new FormData(e.target).get('message'))};}
 function modal(html){$('#modal').innerHTML=html;$('#modal').showModal()}function close(){$('#modal').close()}function confirmMed(id){let m=state.meds.find(m=>m.id===id);if(!m||m.done)return;modal(`<h2>تأكيد أخذ الجرعة</h2><p>${esc(m.name)} · ${esc(m.time)}</p><div class="note" style="margin-top:16px">أكد فقط بعد التحقق من أخذ الجرعة. هذا تسجيل متابعة، وليس توجيهًا لأخذ الدواء.</div><div class="form-actions"><button class="primary" id="confirmNow">نعم، تم أخذها</button><button data-action="close">رجوع</button></div>`);$('#confirmNow').onclick=()=>{if(m.done)return; m.done=true;m.by=state.mode==='elder'?state.profile.name:actorName();m.at=new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});state.logs.push(`${m.by} سجّل تأكيد أخذ ${m.name} — ${m.at}`);change(`${m.by} أكد جرعة ${m.name}`);save();close();render();toast('تم تسجيل التأكيد في سجل المتابعة')};}
 function form(type){let fields=type==='addMed'?'<label>اسم الدواء التجريبي<input name="name" required maxlength="80"></label><label>الجرعة حسب الوصفة<input name="dose" required maxlength="120"></label><label>وقت الجرعة<input name="time" type="time" required></label>':type==='addFamily'?'<label>الاسم<input name="name" required maxlength="50"></label><label>صلة القرابة<input name="relation" required maxlength="60"></label>':'<label>عنوان الموعد<input name="name" required maxlength="80"></label><label>الطبيب أو العيادة<input name="doctor" required maxlength="80"></label><label>اسم المستشفى<input name="hospital" required maxlength="100"></label><label>موقع المستشفى (المدينة والعنوان)<input name="location" required maxlength="200"></label><label>التاريخ<input name="date" type="date" required></label><label>الوقت<input name="time" type="time" required></label><label>المرافق<input name="companion" required maxlength="50"></label>';modal(`<h2>${type==='addMed'?'إضافة دواء تجريبي':type==='addFamily'?'إضافة فرد للعائلة':'إضافة موعد'}</h2><form id="entry">${fields}<div class="form-actions"><button class="primary">حفظ</button><button type="button" data-action="close">إلغاء</button></div></form>`);$('#entry').onsubmit=e=>{e.preventDefault();let v=Object.fromEntries(new FormData(e.target));if(Object.values(v).some(x=>!x.trim()))return toast('يرجى تعبئة الحقول');if(type==='addMed')state.meds.push({...v,id:Date.now(),done:false});else if(type==='addFamily')state.family.push(v);else state.appointments.push(v);change(actorName()+' أضاف '+(type==='addMed'?'دواء':type==='addFamily'?'فردًا للعائلة':'موعدًا'));save();close();render();toast('تم الحفظ')};}
@@ -809,4 +878,293 @@ function aAct(act, val) {
   if (act === 'add-appt') { toggleAssistant(false); form('addAppointment'); return }
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-a]'); if (!b || !activeSpace) return; aAct(b.dataset.a, b.dataset.v) });
+</script><script>/* «فهد» — صوت سند الذكي (2026-11-26)
+   1) مكالمة حيّة مع فهد عبر HUMAIN Voice Agent: يسمع ويرد بصوت سعودي، ويقرأ ويكتب في بيانات سند عبر أدوات محددة.
+   2) صوت HUMAIN لكل القراءة الصوتية في الموقع (ملخص اليوم، ردود المساعد).
+   3) فهد على واتساب (محاكاة): فويس من كبير السن ← رد صوتي وملخص من فهد، وتذكير بالجرعة إذا تأخرت.
+   4) أوقات الأدوية مربوطة بيوم كبير السن (بعد الفطور، بعد الغدا، قبل النوم).
+   5) «ملخص فهد» للأسرة: وش صار مع فهد اليوم.
+   المفتاح ما يكون هنا أبدًا: الموقع يكلم «خادم فهد» (Cloudflare Worker) وهو اللي يحمل مفتاح HUMAIN. */
+const FAHAD_DEFAULT_PROXY = '';
+const F = { call: null, msgs: [], mode: '', status: '', loading: null, audio: null };
+
+/* ---------- الإعدادات ---------- */
+(function () { try { const q = new URLSearchParams(location.search).get('fahad'); if (q && /^https:\/\//.test(q)) localStorage.setItem('sanad-fahad-proxy', q.replace(/\/+$/, '')) } catch { } })();
+function fUrl() { try { return (localStorage.getItem('sanad-fahad-proxy') || FAHAD_DEFAULT_PROXY || '').replace(/\/+$/, '') } catch { return FAHAD_DEFAULT_PROXY } }
+function fData() { state.fahad ||= { log: [], wa: [], waReminded: {} }; state.fahad.log ||= []; state.fahad.wa ||= []; state.fahad.waReminded ||= {}; return state.fahad }
+function fLog(kind, text) { const d = fData(); d.log.push({ kind, text, at: Date.now() }); if (d.log.length > 80) d.log = d.log.slice(-80); save() }
+function fClock(ms) { return new Date(ms).toLocaleTimeString('ar-SA', { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Riyadh' }) }
+function fToday(ms) { const a = new Date(ms).toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' }), b = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' }); return a === b }
+function fWho() { return state.mode === 'elder' ? (state.profile?.name || 'كبير السن') : actorName() }
+
+/* ---------- أوقات الأدوية مربوطة باليوم ---------- */
+function fAnchor(t) {
+  if (!t) return ''; const [h, m] = t.split(':').map(Number), x = h + (m || 0) / 60;
+  if (x < 4) return 'قبل النوم'; if (x < 7) return 'بعد الفجر'; if (x < 11) return 'مع الفطور'; if (x < 12) return 'قبل الظهر';
+  if (x < 15) return 'بعد الغدا'; if (x < 17.5) return 'بعد العصر'; if (x < 19) return 'بعد المغرب'; if (x < 21.5) return 'بعد العشا'; return 'قبل النوم';
+}
+const fBaseMedHTML = medHTML;
+medHTML = function (m) { return fBaseMedHTML(m).replace(/(<span class="time">)/, `$1<b class="f-anchor">${fAnchor(m.time)}</b> `).replace(/(أكّدها [^،<]+)/, m.via ? `$1 (${esc(m.via)})` : '$1') };
+
+/* ---------- صوت HUMAIN لكل القراءة ---------- */
+async function fTTS(text) {
+  const url = fUrl(); if (!url) throw new Error('no-proxy');
+  const r = await fetch(url + '/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: String(text).slice(0, 600) }) });
+  if (!r.ok) throw new Error('tts ' + r.status);
+  return URL.createObjectURL(await r.blob());
+}
+function fStopAudio() { if (F.audio) { F.audio.pause(); F.audio = null } }
+async function fSay(text, onState) {
+  fStopAudio(); const gen = window.sanadVoiceGeneration;
+  try {
+    onState?.('loading'); const src = await fTTS(text); if (gen !== window.sanadVoiceGeneration) return;
+    const a = new Audio(src); F.audio = a; a.onended = () => { onState?.('done'); URL.revokeObjectURL(src) }; await a.play(); onState?.('playing'); return true;
+  } catch (e) { onState?.('fallback'); return false }
+}
+const fBaseStop = stopVoice;
+stopVoice = function () { fStopAudio(); return fBaseStop() };
+const fBaseSpeak = aSpeak;
+aSpeak = function (html) { if (fUrl()) { fSay(aPlain(html)).then(ok => { if (!ok) fBaseSpeak(html) }); return } return fBaseSpeak(html) };
+const fBaseDay = playDaySummary;
+playDaySummary = function () {
+  if (!fUrl()) return fBaseDay();
+  stopVoice(); const s = document.querySelector('.day-summary'), text = dayText(); if (s) { s.hidden = false; s.textContent = text }
+  fSay(text, st => voiceStatus(st === 'loading' ? 'فهد يجهّز ملخصك…' : st === 'playing' ? 'فهد يقرأ لك يومك' : st === 'done' ? 'انتهى ملخصك. اضغط اسمع يومي لإعادته' : 'ما وصلنا صوت فهد، الملخص مكتوب تحت')).then(ok => { if (!ok) fBaseDay() });
+};
+
+/* ---------- أدوات فهد (يستدعيها وكيل HUMAIN أثناء المكالمة) ---------- */
+function fFindMed(q) {
+  const t = aNorm(q); let pick = state.meds.filter(m => t && (aNorm(m.name).includes(t) || t.includes(aNorm(m.name).replace(/^دواء /, ''))));
+  for (const [re] of ADAY) if (!pick.length && re.test(t)) pick = state.meds.filter(m => re.test(aNorm(m.name)) || re.test(aNorm(aTime(m.time))) || re.test(aNorm(fAnchor(m.time))));
+  return pick;
+}
+function fMedRow(m) { return { name: m.name, time: aTime(m.time), with_day: fAnchor(m.time), dose: m.dose, confirmed: !!m.done, confirmed_by: m.by || null, confirmed_at: m.at || null } }
+function fConfirm(m, via) {
+  m.done = true; m.by = fWho(); m.at = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' }); m.via = via;
+  state.logs.push(`${m.by} أكّد أخذ ${m.name} — ${m.at} (${via})`); change(`${m.by} أكد جرعة ${m.name} ${via}`); fLog('dose', `أكّد ${m.name} ${fAnchor(m.time)} (${via})`); save();
+}
+function fTask(title) { if (state.tasks.some(t => t.title === title && t.status !== 'closed')) return false; state.tasks.push({ id: crypto.randomUUID(), title, source: 'fahad', related: null, status: 'open', owner: null, target: null, updated: new Date().toISOString() }); change('فهد فتح طلب متابعة: ' + title); save(); return true }
+const fTools = {
+  get_today: () => ({ summary: aPlain(aBrief()), meds_confirmed: state.meds.filter(m => m.done).length, meds_total: state.meds.length }),
+  get_medications: () => ({ medications: state.meds.map(fMedRow), note: 'لا تقترح جرعة زيادة أو تعويض جرعة فايتة' }),
+  confirm_dose: ({ medication }) => {
+    const p = fFindMed(medication || '');
+    if (!p.length) return { ok: false, error: 'ما لقيت دواء بهالاسم', medications: state.meds.map(m => m.name) };
+    if (p.length > 1) return { ok: false, error: 'أكثر من دواء يطابق، اسأله أي واحد', options: p.map(m => m.name) };
+    const m = p[0]; if (m.done) return { ok: false, error: 'هذا الدواء متأكد من قبل، لا ياخذه مرة ثانية', confirmed_by: m.by, at: m.at };
+    fConfirm(m, 'تأكيد صوتي مع فهد'); setTimeout(render, 50); return { ok: true, medication: m.name, recorded_at: m.at };
+  },
+  get_appointment: () => { const v = nextVisit(); if (!v) return { none: true }; return { name: v.name, doctor: v.doctor, date: aDate(v.date), time: aTime(v.time), hospital: v.hospital, location: v.location, companion: v.companion, doctor_questions: ((typeof pVisit === 'function' ? pVisit() : state.visit)?.questions || []).filter(q => !q.asked).map(q => q.text) } },
+  add_doctor_question: ({ question }) => { const q = String(question || '').trim().slice(0, 200); if (!q) return { ok: false }; if (typeof pAddQ === 'function') pAddQ(q); fLog('question', 'سؤال للدكتور: ' + q); return { ok: true } },
+  who_is_nearest: () => { const q = typeof hQueue === 'function' ? hQueue() : []; return { order: q.map(x => ({ name: taskName(x.idx), km: x.km })), rule: 'التنبيه يروح للأقرب، وعنده ٥ دقايق يأكد وإلا ينتقل للي بعده' } },
+  notify_family: ({ urgency, reason }) => {
+    const r = String(reason || '').slice(0, 160);
+    if (urgency === 'urgent') { const before = state.mode; state.mode = 'elder'; try { hDispatch('need-help') } finally { state.mode = before } fLog('urgent', 'طلب مساعدة عاجلة: ' + r); save(); setTimeout(render, 50); const q = typeof hQueue === 'function' ? hQueue() : []; return { ok: true, sent_to: q[0] ? taskName(q[0].idx) : 'الأسرة', window_minutes: 5, remind: 'قل له يتصل 997 إذا الحالة خطيرة' } }
+    fTask('فهد: ' + (r || 'كبير السن يبي أحد يكلمه')); fLog('call', 'طلب مكالمة: ' + (r || 'يبي أحد يكلمه')); setTimeout(render, 50); return { ok: true, note: 'انفتح طلب متابعة للأسرة' };
+  },
+  report_wellbeing: ({ status, note }) => { const t = status === 'fine' ? 'بخير' : 'تعبان شوي'; try { const d = hData(); d.checkins.push({ text: 'مع فهد: ' + t, at: hNow() }) } catch { } fLog('wellbeing', `قال إنه ${t}${note ? ' — ' + String(note).slice(0, 120) : ''}`); return { ok: true } }
+};
+
+/* ---------- المكالمة الحيّة ---------- */
+function fLoadAgent() {
+  if (window.HumainAgent) return Promise.resolve();
+  return F.loading ||= new Promise((ok, no) => { const s = document.createElement('script'); s.src = 'humain-agent.js?v=20261126'; s.onload = ok; s.onerror = () => { F.loading = null; no(new Error('load')) }; document.head.appendChild(s) });
+}
+function fCallEl() { let d = document.getElementById('fahadCall'); if (!d) { d = document.createElement('dialog'); d.id = 'fahadCall'; d.className = 'f-call'; d.setAttribute('aria-label', 'مكالمة مع فهد'); document.body.appendChild(d); d.addEventListener('cancel', e => { e.preventDefault(); fEnd() }) } return d }
+const F_MODE = { listening: 'أسمعك…', thinking: 'لحظة أشوف…', speaking: 'فهد يتكلم' };
+function fPaint(extra = '') {
+  const d = fCallEl(), live = F.status === 'ready';
+  const stateTxt = F.status === 'connecting' ? 'أتصل بفهد…' : F.status === 'ended' ? 'انتهت المكالمة' : live ? (F_MODE[F.mode] || 'متصل') : '';
+  d.innerHTML = `<div class="f-call-in">
+    <div class="f-orb ${live ? 'is-' + (F.mode || 'listening') : F.status === 'connecting' ? 'is-connecting' : ''}" aria-hidden="true"><span>ف</span></div>
+    <h2>فهد</h2><p class="f-state" role="status">${stateTxt}</p>${extra}
+    <div class="f-lines" aria-live="polite">${F.msgs.slice(-6).map(m => `<p class="${m.role}">${esc(m.text)}</p>`).join('')}</div>
+    <div class="f-btns">${live ? `<button data-f="mute" aria-pressed="${!!F.muted}">${F.muted ? '🎙 شغّل المايك' : '🔇 كتم'}</button>` : ''}<button class="${F.status === 'ended' ? 'primary' : 'h-danger'}" data-f="end">${F.status === 'ended' ? 'إغلاق' : 'إنهاء المكالمة'}</button></div>
+    <p class="small">صوت HUMAIN السعودي. فهد ما يشخّص ولا يغيّر جرعة، وفي الخطر يوجّهك لـ 997 ويبلّغ أقرب واحد من أهلك.</p></div>`;
+  if (!d.open) d.showModal();
+  const l = d.querySelector('.f-lines'); if (l) l.scrollTop = l.scrollHeight;
+}
+function fErrText(e) {
+  const c = e?.code, r = e?.endReason || e?.message || '';
+  if (c === 'MIC_PERMISSION_DENIED') return 'اسمح للمتصفح يستخدم المايك، وجرّب مرة ثانية.';
+  if (/credits/.test(r)) return 'خلص رصيد HUMAIN في الحساب.';
+  if (/concurrency/.test(r)) return 'فهد مشغول بمكالمة ثانية الحين، جرّب بعد شوي.';
+  if (c === 'TOKEN_FETCH_FAILED' || /proxy|fetch|session/.test(r)) return 'خادم فهد ما رد. تأكد من الرابط في الإعدادات.';
+  if (r === 'load') return 'ما قدرت أحمّل أداة الاتصال. تأكد من الإنترنت.';
+  return 'ما قدرت أوصل لفهد الحين.';
+}
+async function fStart() {
+  const url = fUrl();
+  if (!url) { F.msgs = []; F.status = 'ended'; fPaint(`<div class="note">مكالمة فهد الحيّة تحتاج «خادم فهد» (مفتاح HUMAIN على خادم آمن). فعّله من <b>الإعدادات ← صوت فهد</b>. إلى ذلك الحين تقدر تكلمه بالمايك في نافذة المساعد.</div>`); return }
+  if (F.call) return fPaint();
+  try { stopVoice() } catch { }
+  F.msgs = []; F.mode = ''; F.status = 'connecting'; F.muted = false; fPaint();
+  const elder = state.mode === 'elder';
+  try {
+    await fLoadAgent();
+    const { AgentSession } = window.HumainAgent;
+    const call = await AgentSession.start({
+      token: async () => { const r = await fetch(url + '/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: elder ? state.profile?.name : actorName(), role: elder ? 'elder' : 'family', today: new Date().toLocaleDateString('ar-SA', { weekday: 'long', day: 'numeric', month: 'long', calendar: 'gregory', timeZone: 'Asia/Riyadh' }) }) }); if (!r.ok) throw new Error('session ' + r.status); return r.json() },
+      clientTools: fTools,
+      onStatusChange: s => { F.status = s; fPaint() },
+      onModeChange: m => { F.mode = m; fPaint() },
+      onMessage: m => { const i = F.msgs.findIndex(x => x.id === m.id); if (i >= 0) F.msgs[i] = m; else F.msgs.push(m); fPaint() },
+      onAudioBlocked: () => fPaint(`<button class="primary" data-f="audio">🔊 شغّل صوت فهد</button>`),
+      onEnd: ({ reason }) => { F.call = null; F.status = 'ended'; const said = F.msgs.filter(m => m.final && m.role === 'user').length; if (said) fLog('call', `مكالمة مع فهد (${said} ${said > 2 ? 'ردود' : 'رد'})`); fPaint(reason && !/user_left|agent_ended/.test(reason) ? `<div class="note">${fErrText({ endReason: reason })}</div>` : '') },
+      onError: e => console.warn('fahad', e)
+    });
+    F.call = call; F.status = call.status; fPaint();
+  } catch (e) { F.call = null; F.status = 'ended'; fPaint(`<div class="note">${fErrText(e)}</div>`) }
+}
+async function fEnd() { const d = fCallEl(); if (F.call) { try { await F.call.end() } catch { } F.call = null } d.close(); render() }
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-f]'); if (!b) return; const k = b.dataset.f;
+  if (k === 'start') return fStart();
+  if (k === 'end') return fEnd();
+  if (k === 'mute' && F.call) { F.muted = !F.muted; await F.call.setMicMuted(F.muted); return fPaint() }
+  if (k === 'audio' && F.call) { await F.call.startAudio(); return fPaint() }
+  if (k === 'save-proxy') return fSaveProxy();
+  if (k === 'test-proxy') return fTestProxy();
+  if (k === 'clear-proxy') { localStorage.removeItem('sanad-fahad-proxy'); toast('رجعنا لصوت الجهاز'); return render() }
+});
+
+/* ---------- الإعدادات: خادم فهد ---------- */
+function fSettingsCard() {
+  const u = fUrl();
+  return card('صوت فهد — HUMAIN', `<p>فهد يتكلم بصوت HUMAIN السعودي ويقدر يسولف مع كبير السن مكالمة حيّة. المفتاح محفوظ في «خادم فهد» (Cloudflare Worker)، مو في هذا الموقع.</p>
+  <label class="f-field">رابط خادم فهد<input id="f-proxy" dir="ltr" inputmode="url" placeholder="https://sanad-fahad.xxxx.workers.dev" value="${esc(u)}"></label>
+  <div class="form-actions"><button class="primary" data-f="save-proxy">حفظ</button><button data-f="test-proxy" ${u ? '' : 'disabled'}>جرّب صوت فهد</button>${u ? '<button data-f="clear-proxy">رجوع لصوت الجهاز</button>' : ''}</div>
+  <p class="small f-proxy-status" role="status">${u ? 'مفعّل — القراءة الصوتية ومكالمة فهد تمر عبر خادمك.' : 'غير مفعّل — القراءة بصوت الجهاز والتسجيلات الجاهزة.'}</p>`);
+}
+function fSaveProxy() {
+  const v = (document.getElementById('f-proxy')?.value || '').trim().replace(/\/+$/, '');
+  if (v && !/^https:\/\/[^\s/]+/.test(v)) return toast('الرابط لازم يبدأ بـ https://');
+  if (/[?&](key|api)/i.test(v)) return toast('لا تحط المفتاح في الرابط — المفتاح مكانه الخادم');
+  if (v) localStorage.setItem('sanad-fahad-proxy', v); else localStorage.removeItem('sanad-fahad-proxy');
+  toast(v ? 'تم حفظ خادم فهد' : 'تم الحذف'); render();
+}
+async function fTestProxy() {
+  const st = document.querySelector('.f-proxy-status'), set = t => { if (st) st.textContent = t };
+  try { set('أتأكد من الخادم…'); const h = await (await fetch(fUrl() + '/health')).json(); if (!h.key) return set('الخادم شغّال بس ما فيه مفتاح HUMAIN_API_KEY.'); } catch { return set('ما قدرت أوصل للخادم. تأكد من الرابط.') }
+  const ok = await fSay(`هلا والله يا ${state.profile?.name || 'الغالي'}، معك فهد من سند. كيف حالك اليوم؟`, s => set(s === 'loading' ? 'فهد يجهّز صوته…' : s === 'playing' ? 'تسمع فهد الحين ✓' : s === 'done' ? 'تمام، صوت فهد شغّال ✓' : 'الخادم رد بخطأ — تأكد من المفتاح ورصيد HUMAIN.'));
+  if (!ok) set('الخادم رد بخطأ — تأكد من المفتاح ورصيد HUMAIN.');
+}
+
+/* ---------- ملخص فهد للأسرة ---------- */
+const F_ICON = { dose: '✓', question: '؟', call: '☎', urgent: '!', wellbeing: '♡', wa: '✆' };
+function fSummaryCard() {
+  const today = fData().log.filter(x => fToday(x.at)), name = state.profile?.name || 'كبير السن';
+  const body = today.length ? `<ul class="f-log">${today.slice(-6).reverse().map(x => `<li class="k-${x.kind}"><b>${F_ICON[x.kind] || '•'}</b><span>${esc(x.text)}</span><time>${fClock(x.at)}</time></li>`).join('')}</ul>` : `<p>ما تكلم ${esc(name)} مع فهد اليوم للحين. فهد يبادر بالسؤال عنه الصبح، ويذكّره بالجرعة إذا تأخرت.</p>`;
+  return card(`ملخص فهد اليوم <span class="pill">من كلام ${esc(name)}</span>`, body + `<div class="form-actions"><button data-go="whatsapp">✆ فهد على واتساب</button></div>`);
+}
+
+/* ---------- فهد على واتساب (محاكاة) ---------- */
+routes.splice(routes.findIndex(r => r[0] === 'settings'), 0, ['whatsapp', '✆', 'فهد على واتساب']);
+function fWaPush(m) { const d = fData(); d.wa.push({ id: crypto.randomUUID().slice(0, 8), at: Date.now(), ...m }); if (d.wa.length > 60) d.wa = d.wa.slice(-60); save() }
+function fWaProactive() {
+  const d = fData(), key = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' }), name = state.profile?.name || '';
+  if (!d.waReminded[key + ':hi']) { d.waReminded[key + ':hi'] = 1; fWaPush({ from: 'fahad', voice: true, text: `${aGreeting()} يا ${name}، معك فهد. ${aPlain(aBrief())} طمّني عليك، كيف حالك اليوم؟`, btns: [['بخير الحمد لله', 'fine'], ['أبي أحد يكلمني', 'call']] }) }
+  const now = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Riyadh' });
+  state.meds.filter(m => !m.done && m.time < now && !d.waReminded[key + ':' + m.id]).forEach(m => { d.waReminded[key + ':' + m.id] = 1; fWaPush({ from: 'fahad', voice: true, text: `يا ${name}، ${m.name} اللي ${fAnchor(m.time)} — أخذته؟`, btns: [['إيه أخذته', 'dose:' + m.id], ['للحين لا', 'later:' + m.id]] }) });
+  save();
+}
+function fWave(id) { let s = 0; for (const c of id) s = (s * 31 + c.charCodeAt(0)) >>> 0; return Array.from({ length: 26 }, (_, i) => 5 + ((s >> (i % 24)) & 15) + (i % 3) * 2).map(h => `<i style="height:${h}px"></i>`).join('') }
+function fWaBubble(m) {
+  const me = m.from === 'elder', dur = Math.max(2, Math.min(40, Math.round((m.text || '').length / 11)));
+  const voice = m.voice ? `<div class="f-voice"><button data-wa-play="${m.id}" aria-label="تشغيل الفويس">▶</button><span class="f-wave">${fWave(m.id)}</span><small>0:${String(dur).padStart(2, '0')}</small></div>` : '';
+  const text = me ? (m.voice ? `<p class="f-tr">«${esc(m.text)}»</p>` : `<p>${esc(m.text)}</p>`) : `<p>${m.voice ? '<b>ملخص:</b> ' : ''}${esc(m.text)}</p>`;
+  const btns = m.btns && !m.answered ? `<div class="f-wa-btns">${m.btns.map(([l, a]) => `<button data-wa-btn="${m.id}" data-v="${esc(a)}">${esc(l)}</button>`).join('')}</div>` : '';
+  return `<div class="f-wa-msg ${me ? 'me' : ''}">${voice}${text}<time>${fClock(m.at)}${me ? ' ✓✓' : ''}</time>${btns}</div>`;
+}
+function fWaPage() {
+  fWaProactive();
+  const name = state.profile?.name || '';
+  return title('فهد على واتساب', `${esc(name)} يرسل فويس لفهد من واتساب اللي يعرفه، وفهد يرد بصوت وملخص: أدويته، موعده، ويبلّغ أهله.`) +
+    `<div class="f-wa-wrap"><div class="f-phone"><div class="f-wa-head"><span class="f-wa-av">ف</span><div><b>فهد · سند</b><small>${fUrl() ? 'صوت HUMAIN' : 'متصل'}</small></div></div>
+    <div class="f-wa-chat" role="log" aria-live="polite">${fData().wa.map(fWaBubble).join('')}</div>
+    <div class="f-wa-chips">${['وش عندي اليوم؟', 'متى موعدي؟', 'نسيت دواء الظهر', 'كلم مشاعل'].map(c => `<button data-wa-say="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+    <form class="f-wa-bar" id="f-wa-form"><input name="t" maxlength="300" placeholder="اكتب رسالة…" aria-label="رسالة لفهد"><button type="button" class="f-wa-mic" data-wa-mic aria-label="سجّل فويس">🎙</button></form></div>
+    <aside class="card f-wa-side"><h2>كيف يشتغل؟</h2><ol><li>كبير السن يضغط مايك واتساب ويتكلم بلهجته.</li><li>HUMAIN يحوّل الفويس لنص، وفهد يفهم الطلب من بيانات سند.</li><li>فهد يرد بفويس سعودي + سطرين مكتوبة.</li><li>إذا قال «أخذت الدواء» يتسجل للأسرة، وإذا قال إنه تعبان يبلّغ الأقرب.</li></ol>
+    <p class="note">محاكاة داخل النموذج الأولي. الربط الفعلي يحتاج WhatsApp Business Platform (Cloud API) وقاعدة بيانات لسند على خادم، ويبقى ضمن مرحلة التطوير القادمة.</p>
+    <button data-f="start" class="primary">📞 جرّب مكالمة فهد الحيّة</button> <button data-wa-reset>مسح المحادثة</button></aside></div>`;
+}
+async function fWaPlay(id, btn) {
+  const m = fData().wa.find(x => x.id === id); if (!m) return;
+  if (m.from === 'elder' && F.rec?.[id]) { fStopAudio(); const a = new Audio(F.rec[id]); F.audio = a; return a.play() }
+  btn.textContent = '…';
+  const ok = await fSay(m.text, s => { if (s === 'playing') btn.textContent = '❚❚'; if (s === 'done' || s === 'fallback') btn.textContent = '▶' });
+  if (!ok) { btn.textContent = '▶'; aSpeak(esc(m.text)) }
+}
+function fWaFromElder(text, voice, recUrl) {
+  text = String(text || '').trim(); if (!text) return;
+  fWaPush({ from: 'elder', text, voice }); const me = fData().wa.at(-1); if (recUrl) (F.rec ||= {})[me.id] = recUrl;
+  const r = aReply(text), btns = [];
+  (r.actions || []).forEach(a => { if (['confirm', 'sos', 'checkin', 'ask-doctor', 'task', 'tel', 'wa'].includes(a.act) && btns.length < 3) btns.push([a.label, a.act + ':' + a.val]) });
+  fLog('wa', 'واتساب: «' + text.slice(0, 70) + '»');
+  setTimeout(() => { fWaPush({ from: 'fahad', voice: true, text: aPlain(r.text), btns: btns.length ? btns : null }); render(); if (fUrl()) document.querySelector('.f-wa-msg:last-child [data-wa-play]')?.click() }, 700);
+  render();
+}
+function fWaButton(id, v) {
+  const d = fData(), m = d.wa.find(x => x.id === id); if (!m) return; m.answered = true;
+  const [act, ...rest] = v.split(':'), val = rest.join(':'), label = (m.btns.find(b => b[1] === v) || [v])[0];
+  fWaPush({ from: 'elder', text: label });
+  const reply = t => setTimeout(() => { fWaPush({ from: 'fahad', voice: true, text: t }); render() }, 500);
+  if (act === 'dose' || act === 'confirm') { const med = state.meds.find(x => String(x.id) === (val || '')); if (med && !med.done) { fConfirm(med, 'عبر واتساب'); reply(`الله يعطيك العافية، سجلت ${med.name}، وأهلك يشوفونه.`) } else reply('هذا الدواء متأكد من قبل، لا تاخذه مرة ثانية.') }
+  else if (act === 'later') reply('ولا يهمك، أذكرك بعد شوي. ولا تاخذ جرعتين مع بعض.');
+  else if (act === 'fine') { try { hData().checkins.push({ text: 'واتساب: بخير', at: hNow() }) } catch { } fLog('wellbeing', 'قال إنه بخير (واتساب)'); reply('الحمد لله، الله يديم عليك العافية. طمّنت أهلك.') }
+  else if (act === 'call' || act === 'checkin') { fTask('فهد: كبير السن يبي أحد يكلمه'); fLog('call', 'طلب مكالمة من واتساب'); reply('أبشر، بلّغت أهلك يكلمونك.') }
+  else if (act === 'sos') { const before = state.mode; state.mode = 'elder'; try { hDispatch('need-help') } finally { state.mode = before } fLog('urgent', 'طلب مساعدة من واتساب'); reply('بلّغت أقرب واحد من أهلك الحين. وإذا الحالة خطيرة اتصل 997.') }
+  else if (act === 'ask-doctor') { if (typeof pAddQ === 'function') pAddQ(val); fLog('question', 'سؤال للدكتور: ' + val); reply('سجلت سؤالك للدكتور، بيطلع في ورقة الزيارة.') }
+  else if (act === 'task') { fTask(val); reply('فتحت طلب متابعة لأهلك.') }
+  else if (act === 'tel') location.href = 'tel:' + val;
+  else if (act === 'wa') window.open('https://wa.me/' + val.replace('+', ''), '_blank', 'noopener');
+  save(); render();
+}
+function fWaMic(btn) {
+  const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Rec) { const t = prompt('المتصفح ما يدعم تحويل الصوت لنص. اكتب وش قلت في الفويس:'); if (t) fWaFromElder(t, true); return }
+  try { stopVoice() } catch { }
+  let chunks = [], mr = null, url = null, said = '';
+  const finish = () => fWaFromElder(said, true, url);
+  navigator.mediaDevices?.getUserMedia({ audio: true }).then(st => { mr = new MediaRecorder(st); mr.ondataavailable = e => chunks.push(e.data); mr.onstop = () => { st.getTracks().forEach(t => t.stop()); url = URL.createObjectURL(new Blob(chunks, { type: mr.mimeType })); if (said) finish() }; mr.start() }).catch(() => { });
+  const r = new Rec(); r.lang = 'ar-SA'; r.interimResults = false;
+  btn.classList.add('rec'); btn.textContent = '■';
+  r.onresult = e => { said = e.results[0][0].transcript };
+  r.onerror = () => toast('ما وصلني صوت واضح، جرّب مرة ثانية');
+  r.onend = () => { btn.classList.remove('rec'); btn.textContent = '🎙'; if (mr && mr.state === 'recording') mr.stop(); else if (said) finish() };
+  r.start();
+}
+document.addEventListener('click', e => {
+  const t = e.target;
+  const p = t.closest('[data-wa-play]'); if (p) return fWaPlay(p.dataset.waPlay, p);
+  const b = t.closest('[data-wa-btn]'); if (b) return fWaButton(b.dataset.waBtn, b.dataset.v);
+  const s = t.closest('[data-wa-say]'); if (s) return fWaFromElder(s.dataset.waSay, true);
+  const m = t.closest('[data-wa-mic]'); if (m) return fWaMic(m);
+  if (t.closest('[data-wa-reset]')) { const d = fData(); d.wa = []; d.waReminded = {}; save(); render() }
+});
+document.addEventListener('submit', e => { if (e.target.id !== 'f-wa-form') return; e.preventDefault(); const v = new FormData(e.target).get('t'); fWaFromElder(v, false) });
+
+/* ---------- ربط الصفحات ---------- */
+const fBaseRender = render;
+render = function () {
+  fBaseRender(); if (!activeSpace) return;
+  const main = document.getElementById('main'); if (!main) return;
+  if (page === 'whatsapp' && state.mode !== 'elder') { main.innerHTML = fWaPage(); const c = main.querySelector('.f-wa-chat'); if (c) c.scrollTop = c.scrollHeight; }
+  if (page === 'settings' && state.mode !== 'elder' && !main.querySelector('#f-proxy')) main.insertAdjacentHTML('beforeend', fSettingsCard());
+  if (page === 'home' && state.mode !== 'elder' && !main.querySelector('.f-log, .f-sum')) { const head = main.querySelector('.page-head'); const html = `<div class="f-sum">${fSummaryCard()}</div>`; if (head) head.insertAdjacentHTML('afterend', html); else main.insertAdjacentHTML('afterbegin', html) }
+  if (state.mode === 'elder' && page === 'home' && !main.querySelector('.f-elder')) { const v = main.querySelector('.voice-controls'); const html = `<button class="f-elder" data-f="start"><span class="f-orb mini" aria-hidden="true"><span>ف</span></span><span><b>كلّم فهد</b><small>اسأله عن دواك وموعدك، أو قل له يكلم أهلك</small></span></button>`; if (v) v.insertAdjacentHTML('beforebegin', html); else main.insertAdjacentHTML('afterbegin', html) }
+};
+
+/* ---------- المساعد يصير «فهد» ---------- */
+const fBaseAssistant = renderAssistant;
+renderAssistant = function () {
+  fBaseAssistant(); const panel = document.getElementById('assistantPanel'); if (!panel || panel.hidden) return;
+  const h = panel.querySelector('.section-head h2'); if (h) h.innerHTML = 'فهد <span class="pill">معك</span>';
+  const close = panel.querySelector('[data-action="closeAssistant"]'); if (close) close.setAttribute('aria-label', 'إغلاق فهد');
+  const bar = panel.querySelector('.a-voicebar'); if (bar && !bar.querySelector('[data-f="start"]')) { bar.querySelector('[data-voice="fahad"]')?.remove(); bar.insertAdjacentHTML('afterbegin', `<button class="primary" data-f="start">📞 مكالمة مع فهد</button>`) }
+  const mic = panel.querySelector('[data-a="mic"]'); if (mic) mic.classList.remove('primary');
+  const first = panel.querySelector('.chat .bubble'); if (first) first.innerHTML = first.innerHTML.replace('أنا «اسمع»', 'أنا «فهد»');
+  const inp = panel.querySelector('#assistantInput'); if (inp) inp.setAttribute('aria-label', 'رسالتك إلى فهد');
+};
+(function () { const l = document.getElementById('assistantLauncher'); if (l) l.setAttribute('aria-label', 'فتح مساعد فهد'); const p = document.getElementById('assistantPanel'); if (p) p.setAttribute('aria-label', 'مساعد فهد') })();
 </script></body></html>
